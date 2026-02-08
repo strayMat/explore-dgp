@@ -1,0 +1,127 @@
+[project]
+name = "explore-dgp"
+version = "0.0.1"
+description = "experiment with dgps, causal models with ai"
+authors = [{ name = "Matthieu Doutreligne", email = "matt.dout@gmail.com" }]
+readme = "README.md"
+keywords = ['python']
+requires-python = ">=3.13,<4.0"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "click>=8.1.8",
+]
+
+[project.urls]
+Homepage = "https://strayMat.github.io/explore-dgp/"
+Repository = "https://github.com/strayMat/explore-dgp"
+Documentation = "https://strayMat.github.io/explore-dgp/"
+
+
+[dependency-groups]
+dependencies = [
+    "click>=8.1.8",
+]
+dev = [
+    "pytest>=7.2.0",
+    "pre-commit>=2.20.0",
+    "tox-uv>=1.11.3",
+    "ipdb",
+    "ipykernel>=6.0.0",
+    
+    "mypy>=0.991",
+    
+    "ruff>=0.9.2",
+    "importlib-metadata>=6.0.0",
+    "myst-parser>=4.0.0",
+    "pygments>=2.0.0",
+    "sphinx>=8.0.0",
+    "pydata-sphinx-theme>=0.0.0",
+    "sphinx-click>=4.0.0",
+    "jupyter>=1"
+
+
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.setuptools]
+py-modules = ["explore_dgp"]
+
+[tool.mypy]
+files = [
+    "explore_dgp"
+]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+]
+exclude = [
+    "docs/source/conf.py",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+[tool.ruff.format]
+preview = true
+
+
