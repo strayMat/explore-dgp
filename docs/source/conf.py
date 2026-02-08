@@ -7,12 +7,14 @@ from datetime import datetime
 from typing import List
 
 # -- Path setup --------------------------------------------------------------
+import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. Note that we are adding an absolute
 # path.
 _project_directory = pathlib.Path(__file__).parent.parent.parent
 sys.path.insert(0, str(_project_directory))
+os.environ["PYTHONPATH"] = str(_project_directory) + os.pathsep + os.environ.get("PYTHONPATH", "")
 
 
 # -- Project information -----------------------------------------------------
@@ -36,8 +38,14 @@ copyright = f"{datetime.now().year}, {author}"
 version = release = project_metadata["Version"]
 
 # -- General configuration ---------------------------------------------------
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "myst-nb",
+    ".py": "myst-nb",
+}
+
 extensions = [
-    "myst_parser",  # MyST .md parsing (https://myst-parser.readthedocs.io/en/latest/index.html)
+    "myst_nb",  # MyST-NB for notebooks and .md parsing
     "sphinx.ext.autodoc",  # Include documentation from docstrings (https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html)
     "sphinx.ext.autosummary",  # Generate autodoc summaries (https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html)
     "sphinx.ext.intersphinx",  # Link to other projects’ documentation (https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
@@ -64,7 +72,6 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 html_theme_options = {
-    "footer_items": ["sphinx-version"],
     "logo": {
         "image_light": "logo-light.svg",
         "image_dark": "logo-dark.svg",
@@ -86,7 +93,12 @@ autosummary_generate = True  # Turn on sphinx.ext.autosummary
 #     "description"  # Show typehints as content of function or method
 # )
 
-# myst_parser configs
+# myst_nb configs
+nb_execution_mode = "auto"  # Execute notebooks during build if they have changed
+nb_execution_timeout = 60
+nb_custom_formats = {".py": ["jupytext.reads", {"fmt": "py:percent"}]}
+nb_execution_excludepatterns = ["conf.py"]
+
 # Prefix document path to section labels, to use:
 # `path/to/file:heading` instead of just `heading`
 autosectionlabel_prefix_document = True
