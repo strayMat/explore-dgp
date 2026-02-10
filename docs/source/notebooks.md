@@ -1,4 +1,9 @@
-```{include} ../../notebooks/README.md
-:relative-docs: docs/
-:relative-images:
+# Analysis Reports
+
+Below is the analysis of Oaxaca-Blinder failure modes.
+
+```{toctree}
+:maxdepth: 1
+
+notebooks/oaxaca_failure_analysis.py
 ```
