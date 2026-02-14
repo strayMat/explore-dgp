@@ -468,6 +468,12 @@
 <section id="linear-dgp-baseline">
 <h2>1. Linear DGP (Baseline)<a class="headerlink" href="#linear-dgp-baseline" title="Link to this heading">#</a></h2>
 <p>In this scenario, the relationship between covariates and sick leave is perfectly linear.</p>
+<p>Mathematical Form:</p>
+<p>.. math::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon
+</pre></div>
+</div>
+<p>where :math:<code class="docutils literal notranslate"><span class="pre">\epsilon</span> <span class="pre">\sim</span> <span class="pre">\mathcal{N}(0,</span> <span class="pre">1)</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_dgp</span> <span class="o">=</span> <span class="n">LinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -497,6 +503,11 @@ Total Difference   -0.137662
 <h2>2. Non-Linear DGP<a class="headerlink" href="#non-linear-dgp" title="Link to this heading">#</a></h2>
 <p>Here, we introduce <span class="math notranslate nohighlight">\(age^2\)</span> and an interaction between <span class="math notranslate nohighlight">\(age\)</span> and <span class="math notranslate nohighlight">\(unemployment\_rate\)</span>.
 Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.</p>
+<p>Mathematical Form:</p>
+<p>.. math::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon
+</pre></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonlinear_dgp</span> <span class="o">=</span> <span class="n">NonLinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -525,6 +536,16 @@ Total Difference    0.259992
 <h2>3. Unobserved Confounder DGP<a class="headerlink" href="#unobserved-confounder-dgp" title="Link to this heading">#</a></h2>
 <p>In this case, an unobserved variable <span class="math notranslate nohighlight">\(Z\)</span> (e.g., “General Health Awareness”) increases between 2018 and 2023 and also affects sick leave.
 Oaxaca-Blinder cannot account for <span class="math notranslate nohighlight">\(Z\)</span>, so its effect will be mixed into either the “Coefficient” (unexplained) part or incorrectly attributed to other covariates if they are correlated with <span class="math notranslate nohighlight">\(Z\)</span>.</p>
+<p>Mathematical Form:</p>
+<p>.. math::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Z \sim \mathcal{N}(0, 1)
+</pre></div>
+</div>
+<p>.. math::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon
+</pre></div>
+</div>
+<p>In this scenario, :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> is correlated with the <code class="docutils literal notranslate"><span class="pre">year</span></code> but not included in the model covariates.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confounder_dgp</span> <span class="o">=</span> <span class="n">UnobservedConfounderDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>

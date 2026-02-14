@@ -43,7 +43,15 @@ sns.set_theme(style="whitegrid")
 # %% [markdown]
 # ## 1. Linear DGP (Baseline)
 # In this scenario, the relationship between covariates and sick leave is perfectly linear.
-
+#
+# Mathematical Form:
+#
+# .. math::
+#
+#     y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon
+#
+# where :math:`\epsilon \sim \mathcal{N}(0, 1)`.
+#
 # %%
 linear_dgp = LinearDGP(n_samples=5000)
 df_linear = linear_dgp.generate()
@@ -58,7 +66,13 @@ print(analysis_linear.get_summary_table())
 # ## 2. Non-Linear DGP
 # Here, we introduce $age^2$ and an interaction between $age$ and $unemployment\_rate$.
 # Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.
-
+#
+# Mathematical Form:
+#
+# .. math::
+#
+#     y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon
+#
 # %%
 nonlinear_dgp = NonLinearDGP(n_samples=5000)
 df_nonlinear = nonlinear_dgp.generate()
@@ -72,7 +86,19 @@ print(analysis_nonlinear.get_summary_table())
 # ## 3. Unobserved Confounder DGP
 # In this case, an unobserved variable $Z$ (e.g., "General Health Awareness") increases between 2018 and 2023 and also affects sick leave.
 # Oaxaca-Blinder cannot account for $Z$, so its effect will be mixed into either the "Coefficient" (unexplained) part or incorrectly attributed to other covariates if they are correlated with $Z$.
-
+#
+# Mathematical Form:
+#
+# .. math::
+#
+#     Z \sim \mathcal{N}(0, 1)
+#
+# .. math::
+#
+#     y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon
+#
+# In this scenario, :math:`Z` is correlated with the `year` but not included in the model covariates.
+#
 # %%
 confounder_dgp = UnobservedConfounderDGP(n_samples=5000)
 df_confounder = confounder_dgp.generate()
@@ -86,7 +112,7 @@ print(analysis_confounder.get_summary_table())
 # ## Comparison and Visualization
 #
 # We compare the decomposition across the three scenarios.
-
+#
 # %%
 results = {
     "Linear": analysis_linear.get_summary_table()["Value"],
