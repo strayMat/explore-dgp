@@ -13,8 +13,8 @@ def test_oaxaca_analysis():
     summary = analysis.get_summary_table()
     assert "Endowment Effect" in summary.index
     assert "Coefficient Effect" in summary.index
-    assert "Interaction Effect" in summary.index
     assert "Total Difference" in summary.index
+    assert "Interaction Effect" not in summary.index
 
     details = analysis.get_coefficient_details()
     assert "Group 0" in details.columns
