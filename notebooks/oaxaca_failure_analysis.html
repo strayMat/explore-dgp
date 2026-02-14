@@ -527,9 +527,8 @@ beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 
 
 Linear DGP Results:
                        Value
-Endowment Effect    0.334057
-Coefficient Effect -0.475751
-Interaction Effect  0.004032
+Endowment Effect   -0.473840
+Coefficient Effect  0.336178
 Total Difference   -0.137662
 </pre></div>
 </div>
@@ -565,9 +564,8 @@ beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inte
 
 Non-Linear DGP Results:
                        Value
-Endowment Effect    0.270041
-Coefficient Effect -0.094556
-Interaction Effect  0.084508
+Endowment Effect   -0.054844
+Coefficient Effect  0.314836
 Total Difference    0.259992
 </pre></div>
 </div>
@@ -606,9 +604,8 @@ beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 
 
 Unobserved Confounder DGP Results:
                        Value
-Endowment Effect    0.265788
-Coefficient Effect -1.909126
-Interaction Effect  0.042915
+Endowment Effect   -1.886766
+Coefficient Effect  0.286343
 Total Difference   -1.600422
 </pre></div>
 </div>
@@ -640,7 +637,7 @@ Total Difference   -1.600422
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9222afbb1305c19d6d26f022c2d10da50a0f9912756b43bbf2b0ca329017f162.png" src="../_images/9222afbb1305c19d6d26f022c2d10da50a0f9912756b43bbf2b0ca329017f162.png" />
+<img alt="../_images/a2cc5a56ad112f4d775319054ac3d77ee16fa648d163fc57ac446b56fd75eed3.png" src="../_images/a2cc5a56ad112f4d775319054ac3d77ee16fa648d163fc57ac446b56fd75eed3.png" />
 </div>
 </div>
 </section>
@@ -650,19 +647,18 @@ Total Difference   -1.600422
 <ul class="simple">
 <li><p><strong>Endowment Effect (Explained)</strong>: This represents the portion of the difference in the outcome variable that is due to differences in the observed characteristics (covariates) between the two groups. It answers the question: “How much of the difference would remain if both groups had the same coefficients (relationships between covariates and outcome) but kept their own covariate values?”</p></li>
 <li><p><strong>Coefficient Effect (Unexplained)</strong>: This represents the portion of the difference that is due to differences in the coefficients (relationships between covariates and outcome) between the two groups. It answers the question: “How much of the difference would remain if both groups had the same covariate values but kept their own coefficients?”</p></li>
-<li><p><strong>Intercept Effect</strong>: This represents the portion of the difference that is due to the difference in the intercepts of the two groups. It captures any baseline difference in the outcome variable that is not explained by the covariates or their coefficients.</p></li>
-<li><p><strong>Total Difference</strong>: This is the sum of the Endowment Effect, Coefficient Effect, and Intercept Effect. It represents the total difference in the outcome variable between the two groups.</p></li>
+<li><p><strong>Total Difference</strong>: This is the sum of the Endowment Effect and Coefficient Effect. It represents the total difference in the outcome variable between the two groups.</p></li>
 </ul>
 </section>
 <section id="discussion-of-findings">
 <h2>Discussion of Findings<a class="headerlink" href="#discussion-of-findings" title="Link to this heading">#</a></h2>
 <section id="linear-dgp">
 <h3>Linear DGP<a class="headerlink" href="#linear-dgp" title="Link to this heading">#</a></h3>
-<p>The model correctly decomposes the difference. The “Endowment Effect” captures differences in covariates, while the “Coefficient Effect” captures the explicit group effect (<span class="math notranslate nohighlight">\(\gamma\)</span>) we introduced.</p>
+<p>The model correctly decomposes the difference. The “Endowment Effect” captures differences in covariates, while the “Coefficient Effect” captures the explicit group effect ($<span class="math notranslate nohighlight">\( \gamma \)</span>$) we introduced.</p>
 </section>
 <section id="id1">
 <h3>Non-Linear DGP<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<p>When relationships are non-linear (like <span class="math notranslate nohighlight">\(age^2\)</span>), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of <span class="math notranslate nohighlight">\(X\)</span> doesn’t fully capture the impact of the non-linear transformation.</p>
+<p>When relationships are non-linear (like $<span class="math notranslate nohighlight">\( age^2 \)</span><span class="math notranslate nohighlight">\(), the linear Oaxaca-Blinder model provides an approximation. The endowment effect might be biased because the mean of \)</span><span class="math notranslate nohighlight">\( X \)</span>$ doesn’t fully capture the impact of the non-linear transformation.</p>
 </section>
 <section id="id2">
 <h3>Unobserved Confounder DGP<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>

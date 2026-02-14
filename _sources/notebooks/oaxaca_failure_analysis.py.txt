@@ -144,18 +144,16 @@ plt.show()
 #
 # - **Coefficient Effect (Unexplained)**: This represents the portion of the difference that is due to differences in the coefficients (relationships between covariates and outcome) between the two groups. It answers the question: "How much of the difference would remain if both groups had the same covariate values but kept their own coefficients?"
 #
-# - **Intercept Effect**: This represents the portion of the difference that is due to the difference in the intercepts of the two groups. It captures any baseline difference in the outcome variable that is not explained by the covariates or their coefficients.
-#
-# - **Total Difference**: This is the sum of the Endowment Effect, Coefficient Effect, and Intercept Effect. It represents the total difference in the outcome variable between the two groups.
+# - **Total Difference**: This is the sum of the Endowment Effect and Coefficient Effect. It represents the total difference in the outcome variable between the two groups.
 #
 # %% [markdown]
 # ## Discussion of Findings
 #
 # ### Linear DGP
-# The model correctly decomposes the difference. The "Endowment Effect" captures differences in covariates, while the "Coefficient Effect" captures the explicit group effect ($\gamma$) we introduced.
+# The model correctly decomposes the difference. The "Endowment Effect" captures differences in covariates, while the "Coefficient Effect" captures the explicit group effect ($$ \gamma $$) we introduced.
 #
 # ### Non-Linear DGP
-# When relationships are non-linear (like $age^2$), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of $X$ doesn't fully capture the impact of the non-linear transformation.
+# When relationships are non-linear (like $$ age^2 $$), the linear Oaxaca-Blinder model provides an approximation. The endowment effect might be biased because the mean of $$ X $$ doesn't fully capture the impact of the non-linear transformation.
 #
 # ### Unobserved Confounder DGP
 # This is the most critical failure mode. Even if there is no "true" group effect ($$ \gamma=0 $$), the model shows a large "Coefficient Effect" (or "Endowment" if $$ Z $$ is correlated with $$ X $$). This is because the unobserved variable $$ Z $$ is driving the change, but the model attributes it to the groups being "different" in how they translate $$ X $$ to $$ Y $$, or to the groups having different $$ X $$ if $$ Z $$ is correlated with $$ X $$.
