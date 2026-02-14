@@ -51,8 +51,10 @@ sns.set_theme(style="whitegrid")
 # where $$ \epsilon \sim \mathcal{N}(0, 1) $$.
 #
 # %%
+TRUE_EFFECT = 0.5  # True effect of being in 2023 vs 2018
+
 linear_dgp = LinearDGP(n_samples=5000)
-df_linear = linear_dgp.generate()
+df_linear = linear_dgp.generate(true_effect=TRUE_EFFECT)
 
 covariates = ["age", "sex", "revenue", "unemployment_rate"]
 analysis_linear = OaxacaAnalysis(df_linear, "sick_leave", covariates, "group")
@@ -75,7 +77,7 @@ print(analysis_linear.get_summary_table())
 #
 # %%
 nonlinear_dgp = NonLinearDGP(n_samples=5000)
-df_nonlinear = nonlinear_dgp.generate()
+df_nonlinear = nonlinear_dgp.generate(true_effect=TRUE_EFFECT)
 
 analysis_nonlinear = OaxacaAnalysis(df_nonlinear, "sick_leave", covariates, "group")
 analysis_nonlinear.run()
@@ -101,7 +103,7 @@ print(analysis_nonlinear.get_summary_table())
 #
 # %%
 confounder_dgp = UnobservedConfounderDGP(n_samples=5000)
-df_confounder = confounder_dgp.generate()
+df_confounder = confounder_dgp.generate(true_effect=TRUE_EFFECT)
 
 analysis_confounder = OaxacaAnalysis(df_confounder, "sick_leave", covariates, "group")
 analysis_confounder.run()

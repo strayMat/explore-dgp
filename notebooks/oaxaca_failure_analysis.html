@@ -506,8 +506,10 @@
 <p>where $<span class="math notranslate nohighlight">\( \epsilon \sim \mathcal{N}(0, 1) \)</span>$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_dgp</span> <span class="o">=</span> <span class="n">LinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
-<span class="n">df_linear</span> <span class="o">=</span> <span class="n">linear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TRUE_EFFECT</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># True effect of being in 2023 vs 2018</span>
+
+<span class="n">linear_dgp</span> <span class="o">=</span> <span class="n">LinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">df_linear</span> <span class="o">=</span> <span class="n">linear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">true_effect</span><span class="o">=</span><span class="n">TRUE_EFFECT</span><span class="p">)</span>
 
 <span class="n">covariates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
 <span class="n">analysis_linear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_linear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
@@ -545,7 +547,7 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonlinear_dgp</span> <span class="o">=</span> <span class="n">NonLinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
-<span class="n">df_nonlinear</span> <span class="o">=</span> <span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">df_nonlinear</span> <span class="o">=</span> <span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">true_effect</span><span class="o">=</span><span class="n">TRUE_EFFECT</span><span class="p">)</span>
 
 <span class="n">analysis_nonlinear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_nonlinear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
 <span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -560,13 +562,13 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for NonLinear DGP:
-{&#39;beta_0&#39;: 5.0, &#39;beta_age&#39;: 0.01, &#39;beta_age2&#39;: 0.001, &#39;beta_rev_log&#39;: -1.5, &#39;beta_inter&#39;: 0.01, &#39;gamma&#39;: 0.3}
+{&#39;beta_0&#39;: 5.0, &#39;beta_age&#39;: 0.01, &#39;beta_age2&#39;: 0.001, &#39;beta_rev_log&#39;: -1.5, &#39;beta_inter&#39;: 0.01, &#39;gamma&#39;: 0.5}
 
 Non-Linear DGP Results:
                        Value
-Endowment Effect   -0.054844
-Coefficient Effect  0.314836
-Total Difference    0.259992
+Endowment Effect   -0.125281
+Coefficient Effect  0.323938
+Total Difference    0.198657
 </pre></div>
 </div>
 </div>
@@ -585,7 +587,7 @@ Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighl
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confounder_dgp</span> <span class="o">=</span> <span class="n">UnobservedConfounderDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
-<span class="n">df_confounder</span> <span class="o">=</span> <span class="n">confounder_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">df_confounder</span> <span class="o">=</span> <span class="n">confounder_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">true_effect</span><span class="o">=</span><span class="n">TRUE_EFFECT</span><span class="p">)</span>
 
 <span class="n">analysis_confounder</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_confounder</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
 <span class="n">analysis_confounder</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -600,13 +602,13 @@ Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighl
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for UnobservedConfounder DGP:
-{&#39;beta_0&#39;: 2.0, &#39;beta_age&#39;: 0.05, &#39;beta_sex&#39;: 0.5, &#39;beta_rev&#39;: -0.0002, &#39;beta_unemp&#39;: 0.2, &#39;beta_z&#39;: 2.0, &#39;gamma&#39;: 0.0}
+{&#39;beta_0&#39;: 2.0, &#39;beta_age&#39;: 0.05, &#39;beta_sex&#39;: 0.5, &#39;beta_rev&#39;: -0.0002, &#39;beta_unemp&#39;: 0.2, &#39;beta_z&#39;: 2.0, &#39;gamma&#39;: 0.5}
 
 Unobserved Confounder DGP Results:
                        Value
-Endowment Effect   -1.886766
-Coefficient Effect  0.286343
-Total Difference   -1.600422
+Endowment Effect   -2.386668
+Coefficient Effect  0.286448
+Total Difference   -2.100220
 </pre></div>
 </div>
 </div>
@@ -637,7 +639,7 @@ Total Difference   -1.600422
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/a2cc5a56ad112f4d775319054ac3d77ee16fa648d163fc57ac446b56fd75eed3.png" src="../_images/a2cc5a56ad112f4d775319054ac3d77ee16fa648d163fc57ac446b56fd75eed3.png" />
+<img alt="../_images/8a27a32e783781186e1fcaaf698da238a15d92b3ef2470eeae48015b9907fb28.png" src="../_images/8a27a32e783781186e1fcaaf698da238a15d92b3ef2470eeae48015b9907fb28.png" />
 </div>
 </div>
 </section>

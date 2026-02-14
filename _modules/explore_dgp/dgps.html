@@ -518,7 +518,7 @@
 
 <div class="viewcode-block" id="LinearDGP.generate">
 <a class="viewcode-back" href="../../api.html#explore_dgp.dgps.LinearDGP.generate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_effect</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
         <span class="c1"># Define coefficients</span>
@@ -528,7 +528,7 @@
             <span class="s2">&quot;beta_sex&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
             <span class="s2">&quot;beta_rev&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span>
             <span class="s2">&quot;beta_unemp&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Effect of being in 2023 vs 2018</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="n">true_effect</span><span class="p">,</span>  <span class="c1"># Effect of being in 2023 vs 2018</span>
         <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
@@ -567,7 +567,7 @@
 
 <div class="viewcode-block" id="NonLinearDGP.generate">
 <a class="viewcode-back" href="../../api.html#explore_dgp.dgps.NonLinearDGP.generate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_effect</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
@@ -576,7 +576,7 @@
             <span class="s2">&quot;beta_age2&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
             <span class="s2">&quot;beta_rev_log&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span>
             <span class="s2">&quot;beta_inter&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="n">true_effect</span><span class="p">,</span>  <span class="c1"># Effect of being in 2023 vs 2018</span>
         <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
@@ -622,7 +622,7 @@
 
 <div class="viewcode-block" id="UnobservedConfounderDGP.generate">
 <a class="viewcode-back" href="../../api.html#explore_dgp.dgps.UnobservedConfounderDGP.generate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_effect</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
         <span class="c1"># Unobserved confounder Z correlated with group (year)</span>
@@ -636,7 +636,7 @@
             <span class="s2">&quot;beta_rev&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span>
             <span class="s2">&quot;beta_unemp&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
             <span class="s2">&quot;beta_z&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>  <span class="c1"># Strong effect of unobserved variable</span>
-            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># No true group effect, all difference comes from Z and X</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="n">true_effect</span><span class="p">,</span>  <span class="c1"># No true group effect, all difference comes from Z and X</span>
         <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
