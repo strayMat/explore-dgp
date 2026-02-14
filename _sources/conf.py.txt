@@ -77,6 +77,13 @@ html_theme_options = {
         "image_light": "logo-light.svg",
         "image_dark": "logo-dark.svg",
     },
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/strayMat/explore-dgp",
+            "icon": "fab fa-github-square",
+        }
+    ],
 }
 html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
 
