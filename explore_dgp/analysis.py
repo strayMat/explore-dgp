@@ -36,10 +36,10 @@ class OaxacaAnalysis:
         self.model = OaxacaBlinder(y, X, self.group_col, hasconst=hasconst, swap=swap)
         return self.model
 
-    def get_summary_table(self, true_gamma: float = None) -> pd.DataFrame:
+    def get_summary_table(self, true_gamma: float | None = None) -> pd.DataFrame:
         """
         Returns a summary of the decomposition.
-        
+
         Args:
             true_gamma: The true gamma coefficient from the data generating process.
                        If provided, it will be included in the summary.
@@ -55,7 +55,7 @@ class OaxacaAnalysis:
             "Coefficient Effect": params[1],
             "Total Difference": params[2],
         }
-        
+
         if true_gamma is not None:
             summary["True Gamma Effect"] = true_gamma
 
