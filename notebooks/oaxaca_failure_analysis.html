@@ -519,7 +519,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for Linear DGP:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">linear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Linear DGP Results:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">linear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -532,6 +532,7 @@ Linear DGP Results:
 Endowment Effect   -0.473840
 Coefficient Effect  0.336178
 Total Difference   -0.137662
+True Gamma Effect   0.500000
 </pre></div>
 </div>
 </div>
@@ -556,7 +557,7 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for NonLinear DGP:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Non-Linear DGP Results:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -569,6 +570,7 @@ Non-Linear DGP Results:
 Endowment Effect   -0.125281
 Coefficient Effect  0.323938
 Total Difference    0.198657
+True Gamma Effect   0.500000
 </pre></div>
 </div>
 </div>
@@ -596,7 +598,7 @@ Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighl
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for UnobservedConfounder DGP:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">confounder_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Unobserved Confounder DGP Results:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">confounder_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -609,6 +611,7 @@ Unobserved Confounder DGP Results:
 Endowment Effect   -2.386668
 Coefficient Effect  0.286448
 Total Difference   -2.100220
+True Gamma Effect   0.500000
 </pre></div>
 </div>
 </div>
@@ -620,9 +623,9 @@ Total Difference   -2.100220
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;Linear&quot;</span><span class="p">:</span> <span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;Non-Linear&quot;</span><span class="p">:</span> <span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;Confounder&quot;</span><span class="p">:</span> <span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Linear&quot;</span><span class="p">:</span> <span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">linear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">])[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Non-Linear&quot;</span><span class="p">:</span> <span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">])[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Confounder&quot;</span><span class="p">:</span> <span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">(</span><span class="n">true_gamma</span><span class="o">=</span><span class="n">confounder_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">])[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
@@ -639,7 +642,7 @@ Total Difference   -2.100220
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8a27a32e783781186e1fcaaf698da238a15d92b3ef2470eeae48015b9907fb28.png" src="../_images/8a27a32e783781186e1fcaaf698da238a15d92b3ef2470eeae48015b9907fb28.png" />
+<img alt="../_images/ac862140cf50654ee2f8aa45d53ffc33a1053dfb1953c1beea8d84e36208a32f.png" src="../_images/ac862140cf50654ee2f8aa45d53ffc33a1053dfb1953c1beea8d84e36208a32f.png" />
 </div>
 </div>
 </section>

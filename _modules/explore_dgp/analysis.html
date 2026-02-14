@@ -480,9 +480,13 @@
 
 <div class="viewcode-block" id="OaxacaAnalysis.get_summary_table">
 <a class="viewcode-back" href="../../api.html#explore_dgp.analysis.OaxacaAnalysis.get_summary_table">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a summary of the decomposition.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            true_gamma: The true gamma coefficient from the data generating process.</span>
+<span class="sd">                       If provided, it will be included in the summary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ModelNotRunError</span>
@@ -495,6 +499,9 @@
             <span class="s2">&quot;Coefficient Effect&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
             <span class="s2">&quot;Total Difference&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
         <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">true_gamma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;True Gamma Effect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_gamma</span>
 
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Value&quot;</span><span class="p">)</span></div>
 

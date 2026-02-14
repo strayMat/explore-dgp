@@ -64,7 +64,7 @@ analysis_linear.run()
 print("True coefficients for Linear DGP:")
 print(linear_dgp.params)
 print("\nLinear DGP Results:")
-print(analysis_linear.get_summary_table())
+print(analysis_linear.get_summary_table(true_gamma=linear_dgp.params["gamma"]))
 
 # %% [markdown]
 # ## 2. Non-Linear DGP
@@ -86,7 +86,7 @@ analysis_nonlinear.run()
 print("True coefficients for NonLinear DGP:")
 print(nonlinear_dgp.params)
 print("\nNon-Linear DGP Results:")
-print(analysis_nonlinear.get_summary_table())
+print(analysis_nonlinear.get_summary_table(true_gamma=nonlinear_dgp.params["gamma"]))
 
 # %% [markdown]
 # ## 3. Unobserved Confounder DGP
@@ -112,7 +112,7 @@ analysis_confounder.run()
 print("True coefficients for UnobservedConfounder DGP:")
 print(confounder_dgp.params)
 print("\nUnobserved Confounder DGP Results:")
-print(analysis_confounder.get_summary_table())
+print(analysis_confounder.get_summary_table(true_gamma=confounder_dgp.params["gamma"]))
 
 # %% [markdown]
 # ## Comparison and Visualization
@@ -121,9 +121,9 @@ print(analysis_confounder.get_summary_table())
 #
 # %%
 results = {
-    "Linear": analysis_linear.get_summary_table()["Value"],
-    "Non-Linear": analysis_nonlinear.get_summary_table()["Value"],
-    "Confounder": analysis_confounder.get_summary_table()["Value"],
+    "Linear": analysis_linear.get_summary_table(true_gamma=linear_dgp.params["gamma"])["Value"],
+    "Non-Linear": analysis_nonlinear.get_summary_table(true_gamma=nonlinear_dgp.params["gamma"])["Value"],
+    "Confounder": analysis_confounder.get_summary_table(true_gamma=confounder_dgp.params["gamma"])["Value"],
 }
 df_results = pd.DataFrame(results).T
 
