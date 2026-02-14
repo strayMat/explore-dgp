@@ -131,6 +131,7 @@ ignore = [
 ]
 exclude = [
     "docs/source/conf.py",
+    "docs/*",
 ]
 
 [tool.ruff.lint.per-file-ignores]
