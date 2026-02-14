@@ -2,7 +2,7 @@
 
 [![Build status](https://img.shields.io/github/actions/workflow/status/strayMat/explore-dgp/main.yml?branch=main)](https://github.com/strayMat/explore-dgp/actions/workflows/main.yml?query=branch%3Amain)
 [![codecov](https://codecov.io/gh/strayMat/explore-dgp/branch/main/graph/badge.svg)](https://codecov.io/gh/strayMat/explore-dgp)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://strayMat.github.com/explore-dgp/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://straymat.github.io/explore-dgp/)
 [![License](https://img.shields.io/github/license/strayMat/explore-dgp)](https://img.shields.io/github/license/strayMat/explore-dgp)
 
 
@@ -34,8 +34,8 @@
 
 ## Liens utiles
 
-- Documentation :
-- Code source :
+- Documentation : https://straymat.github.io/explore-dgp/
+- Code source : https://github.com/strayMat/explore-dgp
 
 > 📝 **Explication du contenu à rédiger**
 >
