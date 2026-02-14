@@ -35,7 +35,7 @@
 ## Liens utiles
 
 - Documentation : https://straymat.github.io/explore-dgp/
-- Code source : https://github.com/strayMat/explore-dgp
+- Code source : https://github.com/strayMat/explore-dgpe
 
 > 📝 **Explication du contenu à rédiger**
 >
