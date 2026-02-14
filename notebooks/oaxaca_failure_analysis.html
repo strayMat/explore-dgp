@@ -42,6 +42,8 @@
     <script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/oaxaca_failure_analysis';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -420,9 +422,9 @@
 <section id="use-case-definition">
 <h2>Use Case Definition<a class="headerlink" href="#use-case-definition" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Target (:math:<code class="docutils literal notranslate"><span class="pre">y</span></code>):</strong> Percentage of sick leave.</p></li>
+<li><p><strong>Target (<span class="math notranslate nohighlight">\(y\)</span>):</strong> Percentage of sick leave.</p></li>
 <li><p><strong>Groups:</strong> 2018 vs 2023.</p></li>
-<li><p><strong>Covariates (:math:<code class="docutils literal notranslate"><span class="pre">X</span></code>):</strong></p>
+<li><p><strong>Covariates (<span class="math notranslate nohighlight">\(X\)</span>):</strong></p>
 <ul>
 <li><p>Age</p></li>
 <li><p>Sex</p></li>
@@ -493,7 +495,7 @@ Total Difference   -0.137662
 </section>
 <section id="non-linear-dgp">
 <h2>2. Non-Linear DGP<a class="headerlink" href="#non-linear-dgp" title="Link to this heading">#</a></h2>
-<p>Here, we introduce :math:<code class="docutils literal notranslate"><span class="pre">age^2</span></code> and an interaction between :math:<code class="docutils literal notranslate"><span class="pre">age</span></code> and :math:<code class="docutils literal notranslate"><span class="pre">unemployment\_rate</span></code>.
+<p>Here, we introduce <span class="math notranslate nohighlight">\(age^2\)</span> and an interaction between <span class="math notranslate nohighlight">\(age\)</span> and <span class="math notranslate nohighlight">\(unemployment\_rate\)</span>.
 Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -521,8 +523,8 @@ Total Difference    0.259992
 </section>
 <section id="unobserved-confounder-dgp">
 <h2>3. Unobserved Confounder DGP<a class="headerlink" href="#unobserved-confounder-dgp" title="Link to this heading">#</a></h2>
-<p>In this case, an unobserved variable :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> (e.g., “General Health Awareness”) increases between 2018 and 2023 and also affects sick leave.
-Oaxaca-Blinder cannot account for :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code>, so its effect will be mixed into either the “Coefficient” (unexplained) part or incorrectly attributed to other covariates if they are correlated with :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p>
+<p>In this case, an unobserved variable <span class="math notranslate nohighlight">\(Z\)</span> (e.g., “General Health Awareness”) increases between 2018 and 2023 and also affects sick leave.
+Oaxaca-Blinder cannot account for <span class="math notranslate nohighlight">\(Z\)</span>, so its effect will be mixed into either the “Coefficient” (unexplained) part or incorrectly attributed to other covariates if they are correlated with <span class="math notranslate nohighlight">\(Z\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confounder_dgp</span> <span class="o">=</span> <span class="n">UnobservedConfounderDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -580,16 +582,16 @@ Total Difference   -1.600422
 <h2>Discussion of Findings<a class="headerlink" href="#discussion-of-findings" title="Link to this heading">#</a></h2>
 <section id="linear-dgp">
 <h3>Linear DGP<a class="headerlink" href="#linear-dgp" title="Link to this heading">#</a></h3>
-<p>The model correctly decomposes the difference. The “Endowment Effect” captures differences in covariates, while the “Coefficient Effect” captures the explicit group effect (:math:<code class="docutils literal notranslate"><span class="pre">\gamma</span></code>) we introduced.</p>
+<p>The model correctly decomposes the difference. The “Endowment Effect” captures differences in covariates, while the “Coefficient Effect” captures the explicit group effect (<span class="math notranslate nohighlight">\(\gamma\)</span>) we introduced.</p>
 </section>
 <section id="id1">
 <h3>Non-Linear DGP<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<p>When relationships are non-linear (like :math:<code class="docutils literal notranslate"><span class="pre">age^2</span></code>), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of :math:<code class="docutils literal notranslate"><span class="pre">X</span></code> doesn’t fully capture the impact of the non-linear transformation.</p>
+<p>When relationships are non-linear (like <span class="math notranslate nohighlight">\(age^2\)</span>), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of <span class="math notranslate nohighlight">\(X\)</span> doesn’t fully capture the impact of the non-linear transformation.</p>
 </section>
 <section id="id2">
 <h3>Unobserved Confounder DGP<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<p>This is the most critical failure mode. Even if there is no “true” group effect (:math:<code class="docutils literal notranslate"><span class="pre">\gamma=0</span></code>), the model shows a large “Coefficient Effect” (or “Endowment” if :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> is correlated with :math:<code class="docutils literal notranslate"><span class="pre">X</span></code>). This is because the unobserved variable :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> is driving the change, but the model attributes it to the groups being “different” in how they translate :math:<code class="docutils literal notranslate"><span class="pre">X</span></code> to :math:<code class="docutils literal notranslate"><span class="pre">Y</span></code>, or to the groups having different :math:<code class="docutils literal notranslate"><span class="pre">X</span></code> if :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> is correlated with :math:<code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
-<p>In our simulation, we saw a significant Coefficient Effect even though we set the true :math:<code class="docutils literal notranslate"><span class="pre">\gamma=0</span></code>, because :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> was higher in 2023 and had a positive effect on sick leave.</p>
+<p>This is the most critical failure mode. Even if there is no “true” group effect (<span class="math notranslate nohighlight">\(\gamma=0\)</span>), the model shows a large “Coefficient Effect” (or “Endowment” if <span class="math notranslate nohighlight">\(Z\)</span> is correlated with <span class="math notranslate nohighlight">\(X\)</span>). This is because the unobserved variable <span class="math notranslate nohighlight">\(Z\)</span> is driving the change, but the model attributes it to the groups being “different” in how they translate <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(Y\)</span>, or to the groups having different <span class="math notranslate nohighlight">\(X\)</span> if <span class="math notranslate nohighlight">\(Z\)</span> is correlated with <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>In our simulation, we saw a significant Coefficient Effect even though we set the true <span class="math notranslate nohighlight">\(\gamma=0\)</span>, because <span class="math notranslate nohighlight">\(Z\)</span> was higher in 2023 and had a positive effect on sick leave.</p>
 </section>
 </section>
 </section>
