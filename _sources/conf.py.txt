@@ -85,13 +85,17 @@ html_show_sourcelink = False  # Remove 'view source code' from top of page (for 
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 # sphinx.ext.autodoc configs
-# autoclass_content = "both"  # Add __init__ doc (ie. params) to class summaries
-# autodoc_inherit_docstrings = (
-#     True  # If no class summary, inherit base class summary
-# )
-# autodoc_typehints = (
-#     "description"  # Show typehints as content of function or method
-# )
+autoclass_content = "both"  # Add __init__ doc (ie. params) to class summaries
+autodoc_inherit_docstrings = True  # If no class summary, inherit base class summary
+autodoc_typehints = "description"  # Show typehints as content of function or method
+autodoc_default_options = {
+    "members": True,
+    "member-order": "bysource",
+    "special-members": "__init__",
+    "undoc-members": True,
+    "exclude-members": "__weakref__",
+}
+autodoc_mock_imports = []  # Add any modules that can't be imported during doc build
 
 # myst_nb configs
 nb_execution_mode = "auto"  # Execute notebooks during build if they have changed
