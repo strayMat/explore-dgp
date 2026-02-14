@@ -501,11 +501,9 @@
 <h2>1. Linear DGP (Baseline)<a class="headerlink" href="#linear-dgp-baseline" title="Link to this heading">#</a></h2>
 <p>In this scenario, the relationship between covariates and sick leave is perfectly linear.</p>
 <p>Mathematical Form:</p>
-<p>.. math::</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon
-</pre></div>
-</div>
-<p>where :math:<code class="docutils literal notranslate"><span class="pre">\epsilon</span> <span class="pre">\sim</span> <span class="pre">\mathcal{N}(0,</span> <span class="pre">1)</span></code>.</p>
+<div class="math notranslate nohighlight">
+\[ y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon \]</div>
+<p>where $<span class="math notranslate nohighlight">\( \epsilon \sim \mathcal{N}(0, 1) \)</span>$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_dgp</span> <span class="o">=</span> <span class="n">LinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -514,13 +512,20 @@
 <span class="n">covariates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
 <span class="n">analysis_linear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_linear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
 <span class="n">analysis_linear</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear DGP Results:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print true coefficients for Linear DGP</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for Linear DGP:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Linear DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear DGP Results:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for Linear DGP:
+beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5
+
+Linear DGP Results:
                        Value
 Endowment Effect    0.334057
 Coefficient Effect -0.475751
@@ -533,13 +538,11 @@ Total Difference   -0.137662
 </section>
 <section id="non-linear-dgp">
 <h2>2. Non-Linear DGP<a class="headerlink" href="#non-linear-dgp" title="Link to this heading">#</a></h2>
-<p>Here, we introduce <span class="math notranslate nohighlight">\(age^2\)</span> and an interaction between <span class="math notranslate nohighlight">\(age\)</span> and <span class="math notranslate nohighlight">\(unemployment\_rate\)</span>.
+<p>Here, we introduce $<span class="math notranslate nohighlight">\( age^2 \)</span><span class="math notranslate nohighlight">\( and an interaction between \)</span><span class="math notranslate nohighlight">\( age \)</span><span class="math notranslate nohighlight">\( and \)</span><span class="math notranslate nohighlight">\( unemployment\_rate \)</span>$.
 Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.</p>
 <p>Mathematical Form:</p>
-<p>.. math::</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[ y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon \]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonlinear_dgp</span> <span class="o">=</span> <span class="n">NonLinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -547,13 +550,20 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 
 <span class="n">analysis_nonlinear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_nonlinear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
 <span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Non-Linear DGP Results:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print true coefficients for NonLinear DGP</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for NonLinear DGP:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Non-Linear DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Non-Linear DGP Results:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for NonLinear DGP:
+beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3
+
+Non-Linear DGP Results:
                        Value
 Endowment Effect    0.270041
 Coefficient Effect -0.094556
@@ -566,18 +576,14 @@ Total Difference    0.259992
 </section>
 <section id="unobserved-confounder-dgp">
 <h2>3. Unobserved Confounder DGP<a class="headerlink" href="#unobserved-confounder-dgp" title="Link to this heading">#</a></h2>
-<p>In this case, an unobserved variable <span class="math notranslate nohighlight">\(Z\)</span> (e.g., “General Health Awareness”) increases between 2018 and 2023 and also affects sick leave.
-Oaxaca-Blinder cannot account for <span class="math notranslate nohighlight">\(Z\)</span>, so its effect will be mixed into either the “Coefficient” (unexplained) part or incorrectly attributed to other covariates if they are correlated with <span class="math notranslate nohighlight">\(Z\)</span>.</p>
+<p>In this case, an unobserved variable $<span class="math notranslate nohighlight">\( Z \)</span><span class="math notranslate nohighlight">\( (e.g., &quot;General Health Awareness&quot;) increases between 2018 and 2023 and also affects sick leave.
+Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighlight">\( Z \)</span><span class="math notranslate nohighlight">\(, so its effect will be mixed into either the &quot;Coefficient&quot; (unexplained) part or incorrectly attributed to other covariates if they are correlated with \)</span><span class="math notranslate nohighlight">\( Z \)</span>$.</p>
 <p>Mathematical Form:</p>
-<p>.. math::</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Z \sim \mathcal{N}(0, 1)
-</pre></div>
-</div>
-<p>.. math::</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon
-</pre></div>
-</div>
-<p>In this scenario, :math:<code class="docutils literal notranslate"><span class="pre">Z</span></code> is correlated with the <code class="docutils literal notranslate"><span class="pre">year</span></code> but not included in the model covariates.</p>
+<div class="math notranslate nohighlight">
+\[ Z \sim \mathcal{N}(0, 1) \]</div>
+<div class="math notranslate nohighlight">
+\[ y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon \]</div>
+<p>In this scenario, $<span class="math notranslate nohighlight">\( Z \)</span>$ is correlated with the <code class="docutils literal notranslate"><span class="pre">year</span></code> but not included in the model covariates.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confounder_dgp</span> <span class="o">=</span> <span class="n">UnobservedConfounderDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -585,13 +591,20 @@ Oaxaca-Blinder cannot account for <span class="math notranslate nohighlight">\(Z
 
 <span class="n">analysis_confounder</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_confounder</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
 <span class="n">analysis_confounder</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unobserved Confounder DGP Results:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print true coefficients for UnobservedConfounder DGP</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for UnobservedConfounder DGP:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Unobserved Confounder DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Unobserved Confounder DGP Results:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for UnobservedConfounder DGP:
+beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0
+
+Unobserved Confounder DGP Results:
                        Value
 Endowment Effect    0.265788
 Coefficient Effect -1.909126
@@ -631,6 +644,16 @@ Total Difference   -1.600422
 </div>
 </div>
 </section>
+<section id="explanation-of-coefficient-names">
+<h2>Explanation of Coefficient Names<a class="headerlink" href="#explanation-of-coefficient-names" title="Link to this heading">#</a></h2>
+<p>Based on the <a class="reference external" href="https://www.statsmodels.org/stable/generated/statsmodels.stats.oaxaca.OaxacaResults.html#statsmodels.stats.oaxaca.OaxacaResults">OaxacaResults documentation</a>, the coefficients in the decomposition have the following meanings:</p>
+<ul class="simple">
+<li><p><strong>Endowment Effect (Explained)</strong>: This represents the portion of the difference in the outcome variable that is due to differences in the observed characteristics (covariates) between the two groups. It answers the question: “How much of the difference would remain if both groups had the same coefficients (relationships between covariates and outcome) but kept their own covariate values?”</p></li>
+<li><p><strong>Coefficient Effect (Unexplained)</strong>: This represents the portion of the difference that is due to differences in the coefficients (relationships between covariates and outcome) between the two groups. It answers the question: “How much of the difference would remain if both groups had the same covariate values but kept their own coefficients?”</p></li>
+<li><p><strong>Intercept Effect</strong>: This represents the portion of the difference that is due to the difference in the intercepts of the two groups. It captures any baseline difference in the outcome variable that is not explained by the covariates or their coefficients.</p></li>
+<li><p><strong>Total Difference</strong>: This is the sum of the Endowment Effect, Coefficient Effect, and Intercept Effect. It represents the total difference in the outcome variable between the two groups.</p></li>
+</ul>
+</section>
 <section id="discussion-of-findings">
 <h2>Discussion of Findings<a class="headerlink" href="#discussion-of-findings" title="Link to this heading">#</a></h2>
 <section id="linear-dgp">
@@ -643,8 +666,8 @@ Total Difference   -1.600422
 </section>
 <section id="id2">
 <h3>Unobserved Confounder DGP<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<p>This is the most critical failure mode. Even if there is no “true” group effect (<span class="math notranslate nohighlight">\(\gamma=0\)</span>), the model shows a large “Coefficient Effect” (or “Endowment” if <span class="math notranslate nohighlight">\(Z\)</span> is correlated with <span class="math notranslate nohighlight">\(X\)</span>). This is because the unobserved variable <span class="math notranslate nohighlight">\(Z\)</span> is driving the change, but the model attributes it to the groups being “different” in how they translate <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(Y\)</span>, or to the groups having different <span class="math notranslate nohighlight">\(X\)</span> if <span class="math notranslate nohighlight">\(Z\)</span> is correlated with <span class="math notranslate nohighlight">\(X\)</span>.</p>
-<p>In our simulation, we saw a significant Coefficient Effect even though we set the true <span class="math notranslate nohighlight">\(\gamma=0\)</span>, because <span class="math notranslate nohighlight">\(Z\)</span> was higher in 2023 and had a positive effect on sick leave.</p>
+<p>This is the most critical failure mode. Even if there is no “true” group effect ($<span class="math notranslate nohighlight">\( \gamma=0 \)</span><span class="math notranslate nohighlight">\(), the model shows a large &quot;Coefficient Effect&quot; (or &quot;Endowment&quot; if \)</span><span class="math notranslate nohighlight">\( Z \)</span><span class="math notranslate nohighlight">\( is correlated with \)</span><span class="math notranslate nohighlight">\( X \)</span><span class="math notranslate nohighlight">\(). This is because the unobserved variable \)</span><span class="math notranslate nohighlight">\( Z \)</span><span class="math notranslate nohighlight">\( is driving the change, but the model attributes it to the groups being &quot;different&quot; in how they translate \)</span><span class="math notranslate nohighlight">\( X \)</span><span class="math notranslate nohighlight">\( to \)</span><span class="math notranslate nohighlight">\( Y \)</span><span class="math notranslate nohighlight">\(, or to the groups having different \)</span><span class="math notranslate nohighlight">\( X \)</span><span class="math notranslate nohighlight">\( if \)</span><span class="math notranslate nohighlight">\( Z \)</span><span class="math notranslate nohighlight">\( is correlated with \)</span><span class="math notranslate nohighlight">\( X \)</span>$.</p>
+<p>In our simulation, we saw a significant Coefficient Effect even though we set the true $<span class="math notranslate nohighlight">\( \gamma=0 \)</span><span class="math notranslate nohighlight">\(, because \)</span><span class="math notranslate nohighlight">\( Z \)</span>$ was higher in 2023 and had a positive effect on sick leave.</p>
 </section>
 </section>
 </section>
@@ -701,6 +724,7 @@ Total Difference   -1.600422
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-linear-dgp">2. Non-Linear DGP</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unobserved-confounder-dgp">3. Unobserved Confounder DGP</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-and-visualization">Comparison and Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation-of-coefficient-names">Explanation of Coefficient Names</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-findings">Discussion of Findings</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-dgp">Linear DGP</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Linear DGP</a></li>

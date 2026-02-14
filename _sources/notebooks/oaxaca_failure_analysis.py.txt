@@ -46,11 +46,9 @@ sns.set_theme(style="whitegrid")
 #
 # Mathematical Form:
 #
-# .. math::
+# $$ y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon $$
 #
-#     y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon
-#
-# where :math:`\epsilon \sim \mathcal{N}(0, 1)`.
+# where $$ \epsilon \sim \mathcal{N}(0, 1) $$.
 #
 # %%
 linear_dgp = LinearDGP(n_samples=5000)
@@ -59,19 +57,21 @@ df_linear = linear_dgp.generate()
 covariates = ["age", "sex", "revenue", "unemployment_rate"]
 analysis_linear = OaxacaAnalysis(df_linear, "sick_leave", covariates, "group")
 analysis_linear.run()
-print("Linear DGP Results:")
+
+# Print true coefficients for Linear DGP
+print("True coefficients for Linear DGP:")
+print("beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5")
+print("\nLinear DGP Results:")
 print(analysis_linear.get_summary_table())
 
 # %% [markdown]
 # ## 2. Non-Linear DGP
-# Here, we introduce $age^2$ and an interaction between $age$ and $unemployment\_rate$.
+# Here, we introduce $$ age^2 $$ and an interaction between $$ age $$ and $$ unemployment\_rate $$.
 # Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.
 #
 # Mathematical Form:
 #
-# .. math::
-#
-#     y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon
+# $$ y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon $$
 #
 # %%
 nonlinear_dgp = NonLinearDGP(n_samples=5000)
@@ -79,25 +79,25 @@ df_nonlinear = nonlinear_dgp.generate()
 
 analysis_nonlinear = OaxacaAnalysis(df_nonlinear, "sick_leave", covariates, "group")
 analysis_nonlinear.run()
-print("Non-Linear DGP Results:")
+
+# Print true coefficients for NonLinear DGP
+print("True coefficients for NonLinear DGP:")
+print("beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3")
+print("\nNon-Linear DGP Results:")
 print(analysis_nonlinear.get_summary_table())
 
 # %% [markdown]
 # ## 3. Unobserved Confounder DGP
-# In this case, an unobserved variable $Z$ (e.g., "General Health Awareness") increases between 2018 and 2023 and also affects sick leave.
-# Oaxaca-Blinder cannot account for $Z$, so its effect will be mixed into either the "Coefficient" (unexplained) part or incorrectly attributed to other covariates if they are correlated with $Z$.
+# In this case, an unobserved variable $$ Z $$ (e.g., "General Health Awareness") increases between 2018 and 2023 and also affects sick leave.
+# Oaxaca-Blinder cannot account for $$ Z $$, so its effect will be mixed into either the "Coefficient" (unexplained) part or incorrectly attributed to other covariates if they are correlated with $$ Z $$.
 #
 # Mathematical Form:
 #
-# .. math::
+# $$ Z \sim \mathcal{N}(0, 1) $$
 #
-#     Z \sim \mathcal{N}(0, 1)
+# $$ y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon $$
 #
-# .. math::
-#
-#     y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon
-#
-# In this scenario, :math:`Z` is correlated with the `year` but not included in the model covariates.
+# In this scenario, $$ Z $$ is correlated with the `year` but not included in the model covariates.
 #
 # %%
 confounder_dgp = UnobservedConfounderDGP(n_samples=5000)
@@ -105,7 +105,11 @@ df_confounder = confounder_dgp.generate()
 
 analysis_confounder = OaxacaAnalysis(df_confounder, "sick_leave", covariates, "group")
 analysis_confounder.run()
-print("Unobserved Confounder DGP Results:")
+
+# Print true coefficients for UnobservedConfounder DGP
+print("True coefficients for UnobservedConfounder DGP:")
+print("beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0")
+print("\nUnobserved Confounder DGP Results:")
 print(analysis_confounder.get_summary_table())
 
 # %% [markdown]
@@ -132,6 +136,19 @@ plt.xticks(rotation=0)
 plt.show()
 
 # %% [markdown]
+# ## Explanation of Coefficient Names
+#
+# Based on the [OaxacaResults documentation](https://www.statsmodels.org/stable/generated/statsmodels.stats.oaxaca.OaxacaResults.html#statsmodels.stats.oaxaca.OaxacaResults), the coefficients in the decomposition have the following meanings:
+#
+# - **Endowment Effect (Explained)**: This represents the portion of the difference in the outcome variable that is due to differences in the observed characteristics (covariates) between the two groups. It answers the question: "How much of the difference would remain if both groups had the same coefficients (relationships between covariates and outcome) but kept their own covariate values?"
+#
+# - **Coefficient Effect (Unexplained)**: This represents the portion of the difference that is due to differences in the coefficients (relationships between covariates and outcome) between the two groups. It answers the question: "How much of the difference would remain if both groups had the same covariate values but kept their own coefficients?"
+#
+# - **Intercept Effect**: This represents the portion of the difference that is due to the difference in the intercepts of the two groups. It captures any baseline difference in the outcome variable that is not explained by the covariates or their coefficients.
+#
+# - **Total Difference**: This is the sum of the Endowment Effect, Coefficient Effect, and Intercept Effect. It represents the total difference in the outcome variable between the two groups.
+#
+# %% [markdown]
 # ## Discussion of Findings
 #
 # ### Linear DGP
@@ -141,6 +158,6 @@ plt.show()
 # When relationships are non-linear (like $age^2$), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of $X$ doesn't fully capture the impact of the non-linear transformation.
 #
 # ### Unobserved Confounder DGP
-# This is the most critical failure mode. Even if there is no "true" group effect ($\gamma=0$), the model shows a large "Coefficient Effect" (or "Endowment" if $Z$ is correlated with $X$). This is because the unobserved variable $Z$ is driving the change, but the model attributes it to the groups being "different" in how they translate $X$ to $Y$, or to the groups having different $X$ if $Z$ is correlated with $X$.
+# This is the most critical failure mode. Even if there is no "true" group effect ($$ \gamma=0 $$), the model shows a large "Coefficient Effect" (or "Endowment" if $$ Z $$ is correlated with $$ X $$). This is because the unobserved variable $$ Z $$ is driving the change, but the model attributes it to the groups being "different" in how they translate $$ X $$ to $$ Y $$, or to the groups having different $$ X $$ if $$ Z $$ is correlated with $$ X $$.
 #
-# In our simulation, we saw a significant Coefficient Effect even though we set the true $\gamma=0$, because $Z$ was higher in 2023 and had a positive effect on sick leave.
+# In our simulation, we saw a significant Coefficient Effect even though we set the true $$ \gamma=0 $$, because $$ Z $$ was higher in 2023 and had a positive effect on sick leave.
