@@ -62,11 +62,13 @@ class LinearDGP(BaseDGP):
     r"""
     Linear Data Generating Process.
 
-    The target variable $y$ (percentage of sick leave) is a linear combination of covariates:
+    The target variable :math:`y` (percentage of sick leave) is a linear combination of covariates:
 
-    $$y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon$$
+    .. math::
 
-    where $\epsilon \sim \mathcal{N}(0, 1)$.
+        y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon
+
+    where :math:`\epsilon \sim \mathcal{N}(0, 1)`.
     """
 
     def generate(self) -> pd.DataFrame:
@@ -101,9 +103,11 @@ class NonLinearDGP(BaseDGP):
     r"""
     Non-Linear Data Generating Process.
 
-    The target variable $y$ includes non-linear terms and interactions:
+    The target variable :math:`y` includes non-linear terms and interactions:
 
-    $$y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon$$
+    .. math::
+
+        y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon
 
     Oaxaca-Blinder might struggle with the linear approximation of these relationships.
     """
@@ -138,16 +142,21 @@ class UnobservedConfounderDGP(BaseDGP):
     r"""
     Data Generating Process with an Unobserved Confounder.
 
-    A hidden variable $Z$ affects both the group assignment (implicitly via year characteristics)
-    and the outcome $y$:
+    A hidden variable :math:`Z` affects both the group assignment (implicitly via year characteristics)
+    and the outcome :math:`y`:
 
-    $$Z \sim \mathcal{N}(0, 1)$$
-    $$y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon$$
+    .. math::
 
-    In this scenario, $Z$ is correlated with the `year` but not included in the model covariates.
-    Oaxaca-Blinder will attribute the effect of $Z$ to the group or other covariates incorrectly.
+        Z \sim \mathcal{N}(0, 1)
 
-    For example, $Z$ could be "General Health Awareness" which increased in 2023.
+    .. math::
+
+        y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon
+
+    In this scenario, :math:`Z` is correlated with the `year` but not included in the model covariates.
+    Oaxaca-Blinder will attribute the effect of :math:`Z` to the group or other covariates incorrectly.
+
+    For example, :math:`Z` could be "General Health Awareness" which increased in 2023.
     """
 
     def generate(self) -> pd.DataFrame:
