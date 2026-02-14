@@ -515,7 +515,7 @@
 
 <span class="c1"># Print true coefficients for Linear DGP</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for Linear DGP:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">linear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Linear DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
@@ -523,7 +523,7 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for Linear DGP:
-beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5
+{&#39;beta_0&#39;: 2.0, &#39;beta_age&#39;: 0.05, &#39;beta_sex&#39;: 0.5, &#39;beta_rev&#39;: -0.0002, &#39;beta_unemp&#39;: 0.2, &#39;gamma&#39;: 0.5}
 
 Linear DGP Results:
                        Value
@@ -552,7 +552,7 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 
 <span class="c1"># Print true coefficients for NonLinear DGP</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for NonLinear DGP:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Non-Linear DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
@@ -560,7 +560,7 @@ Since Oaxaca-Blinder is a linear model, it might not capture the true endowment 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for NonLinear DGP:
-beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3
+{&#39;beta_0&#39;: 5.0, &#39;beta_age&#39;: 0.01, &#39;beta_age2&#39;: 0.001, &#39;beta_rev_log&#39;: -1.5, &#39;beta_inter&#39;: 0.01, &#39;gamma&#39;: 0.3}
 
 Non-Linear DGP Results:
                        Value
@@ -592,7 +592,7 @@ Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighl
 
 <span class="c1"># Print true coefficients for UnobservedConfounder DGP</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True coefficients for UnobservedConfounder DGP:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">confounder_dgp</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Unobserved Confounder DGP Results:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
 </pre></div>
@@ -600,7 +600,7 @@ Oaxaca-Blinder cannot account for \)</span><span class="math notranslate nohighl
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True coefficients for UnobservedConfounder DGP:
-beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0
+{&#39;beta_0&#39;: 2.0, &#39;beta_age&#39;: 0.05, &#39;beta_sex&#39;: 0.5, &#39;beta_rev&#39;: -0.0002, &#39;beta_unemp&#39;: 0.2, &#39;beta_z&#39;: 2.0, &#39;gamma&#39;: 0.0}
 
 Unobserved Confounder DGP Results:
                        Value

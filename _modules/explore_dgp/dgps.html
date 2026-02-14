@@ -522,22 +522,24 @@
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
         <span class="c1"># Define coefficients</span>
-        <span class="n">beta_0</span> <span class="o">=</span> <span class="mf">2.0</span>
-        <span class="n">beta_age</span> <span class="o">=</span> <span class="mf">0.05</span>
-        <span class="n">beta_sex</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="n">beta_rev</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0002</span>
-        <span class="n">beta_unemp</span> <span class="o">=</span> <span class="mf">0.2</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Effect of being in 2023 vs 2018</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;beta_0&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="s2">&quot;beta_age&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s2">&quot;beta_sex&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;beta_rev&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span>
+            <span class="s2">&quot;beta_unemp&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Effect of being in 2023 vs 2018</span>
+        <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
 
         <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">beta_0</span>
-            <span class="o">+</span> <span class="n">beta_age</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_sex</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_rev</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_unemp</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_0&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_sex&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_rev&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_unemp&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
             <span class="o">+</span> <span class="n">noise</span>
         <span class="p">)</span>
         <span class="c1"># Clip to ensure percentage-like behavior (though it&#39;s a toy model)</span>
@@ -568,22 +570,24 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
-        <span class="n">beta_0</span> <span class="o">=</span> <span class="mf">5.0</span>
-        <span class="n">beta_age</span> <span class="o">=</span> <span class="mf">0.01</span>
-        <span class="n">beta_age2</span> <span class="o">=</span> <span class="mf">0.001</span>
-        <span class="n">beta_rev_log</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span>
-        <span class="n">beta_inter</span> <span class="o">=</span> <span class="mf">0.01</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;beta_0&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+            <span class="s2">&quot;beta_age&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+            <span class="s2">&quot;beta_age2&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+            <span class="s2">&quot;beta_rev_log&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span>
+            <span class="s2">&quot;beta_inter&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+        <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
 
         <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">beta_0</span>
-            <span class="o">+</span> <span class="n">beta_age</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_age2</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="o">+</span> <span class="n">beta_rev_log</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">])</span>
-            <span class="o">+</span> <span class="n">beta_inter</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">])</span>
-            <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_0&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_age2&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_rev_log&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">])</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_inter&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">])</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
             <span class="o">+</span> <span class="n">noise</span>
         <span class="p">)</span>
         <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -625,24 +629,26 @@
         <span class="c1"># Z is higher in 2023 (group 1)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
-        <span class="n">beta_0</span> <span class="o">=</span> <span class="mf">2.0</span>
-        <span class="n">beta_age</span> <span class="o">=</span> <span class="mf">0.05</span>
-        <span class="n">beta_sex</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="n">beta_rev</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.0002</span>
-        <span class="n">beta_unemp</span> <span class="o">=</span> <span class="mf">0.2</span>
-        <span class="n">beta_z</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># Strong effect of unobserved variable</span>
-        <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># No true group effect, all difference comes from Z and X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;beta_0&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="s2">&quot;beta_age&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s2">&quot;beta_sex&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;beta_rev&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span>
+            <span class="s2">&quot;beta_unemp&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+            <span class="s2">&quot;beta_z&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>  <span class="c1"># Strong effect of unobserved variable</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># No true group effect, all difference comes from Z and X</span>
+        <span class="p">}</span>
 
         <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">)</span>
 
         <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">beta_0</span>
-            <span class="o">+</span> <span class="n">beta_age</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_sex</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_rev</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_unemp</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">beta_z</span> <span class="o">*</span> <span class="n">z</span>
-            <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_0&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_sex&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_rev&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_unemp&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_z&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">z</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span>
             <span class="o">+</span> <span class="n">noise</span>
         <span class="p">)</span>
         <span class="c1"># We don&#39;t include &#39;z&#39; in the returned dataframe to simulate it being unobserved</span>
