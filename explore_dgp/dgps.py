@@ -75,22 +75,24 @@ class LinearDGP(BaseDGP):
         df = self.generate_base_covariates()
 
         # Define coefficients
-        beta_0 = 2.0
-        beta_age = 0.05
-        beta_sex = 0.5
-        beta_rev = -0.0002
-        beta_unemp = 0.2
-        gamma = 0.5  # Effect of being in 2023 vs 2018
+        self.params = {
+            "beta_0": 2.0,
+            "beta_age": 0.05,
+            "beta_sex": 0.5,
+            "beta_rev": -0.0002,
+            "beta_unemp": 0.2,
+            "gamma": 0.5,  # Effect of being in 2023 vs 2018
+        }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 
         df["sick_leave"] = (
-            beta_0
-            + beta_age * df["age"]
-            + beta_sex * df["sex"]
-            + beta_rev * df["revenue"]
-            + beta_unemp * df["unemployment_rate"]
-            + gamma * df["group"]
+            self.params["beta_0"]
+            + self.params["beta_age"] * df["age"]
+            + self.params["beta_sex"] * df["sex"]
+            + self.params["beta_rev"] * df["revenue"]
+            + self.params["beta_unemp"] * df["unemployment_rate"]
+            + self.params["gamma"] * df["group"]
             + noise
         )
         # Clip to ensure percentage-like behavior (though it's a toy model)
@@ -115,22 +117,24 @@ class NonLinearDGP(BaseDGP):
     def generate(self) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
-        beta_0 = 5.0
-        beta_age = 0.01
-        beta_age2 = 0.001
-        beta_rev_log = -1.5
-        beta_inter = 0.01
-        gamma = 0.3
+        self.params = {
+            "beta_0": 5.0,
+            "beta_age": 0.01,
+            "beta_age2": 0.001,
+            "beta_rev_log": -1.5,
+            "beta_inter": 0.01,
+            "gamma": 0.3,
+        }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 
         df["sick_leave"] = (
-            beta_0
-            + beta_age * df["age"]
-            + beta_age2 * (df["age"] ** 2)
-            + beta_rev_log * np.log(df["revenue"])
-            + beta_inter * (df["age"] * df["unemployment_rate"])
-            + gamma * df["group"]
+            self.params["beta_0"]
+            + self.params["beta_age"] * df["age"]
+            + self.params["beta_age2"] * (df["age"] ** 2)
+            + self.params["beta_rev_log"] * np.log(df["revenue"])
+            + self.params["beta_inter"] * (df["age"] * df["unemployment_rate"])
+            + self.params["gamma"] * df["group"]
             + noise
         )
         df["sick_leave"] = df["sick_leave"].clip(lower=0)
@@ -166,24 +170,26 @@ class UnobservedConfounderDGP(BaseDGP):
         # Z is higher in 2023 (group 1)
         z = self.rng.normal(df["group"] * 1.0, 1.0)
 
-        beta_0 = 2.0
-        beta_age = 0.05
-        beta_sex = 0.5
-        beta_rev = -0.0002
-        beta_unemp = 0.2
-        beta_z = 2.0  # Strong effect of unobserved variable
-        gamma = 0.0  # No true group effect, all difference comes from Z and X
+        self.params = {
+            "beta_0": 2.0,
+            "beta_age": 0.05,
+            "beta_sex": 0.5,
+            "beta_rev": -0.0002,
+            "beta_unemp": 0.2,
+            "beta_z": 2.0,  # Strong effect of unobserved variable
+            "gamma": 0.0,  # No true group effect, all difference comes from Z and X
+        }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 
         df["sick_leave"] = (
-            beta_0
-            + beta_age * df["age"]
-            + beta_sex * df["sex"]
-            + beta_rev * df["revenue"]
-            + beta_unemp * df["unemployment_rate"]
-            + beta_z * z
-            + gamma * df["group"]
+            self.params["beta_0"]
+            + self.params["beta_age"] * df["age"]
+            + self.params["beta_sex"] * df["sex"]
+            + self.params["beta_rev"] * df["revenue"]
+            + self.params["beta_unemp"] * df["unemployment_rate"]
+            + self.params["beta_z"] * z
+            + self.params["gamma"] * df["group"]
             + noise
         )
         # We don't include 'z' in the returned dataframe to simulate it being unobserved

@@ -60,7 +60,7 @@ analysis_linear.run()
 
 # Print true coefficients for Linear DGP
 print("True coefficients for Linear DGP:")
-print("beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, gamma = 0.5")
+print(linear_dgp.params)
 print("\nLinear DGP Results:")
 print(analysis_linear.get_summary_table())
 
@@ -82,7 +82,7 @@ analysis_nonlinear.run()
 
 # Print true coefficients for NonLinear DGP
 print("True coefficients for NonLinear DGP:")
-print("beta_0 = 5.0, beta_age = 0.01, beta_age2 = 0.001, beta_rev_log = -1.5, beta_inter = 0.01, gamma = 0.3")
+print(nonlinear_dgp.params)
 print("\nNon-Linear DGP Results:")
 print(analysis_nonlinear.get_summary_table())
 
@@ -108,7 +108,7 @@ analysis_confounder.run()
 
 # Print true coefficients for UnobservedConfounder DGP
 print("True coefficients for UnobservedConfounder DGP:")
-print("beta_0 = 2.0, beta_age = 0.05, beta_sex = 0.5, beta_rev = -0.0002, beta_unemp = 0.2, beta_z = 2.0, gamma = 0.0")
+print(confounder_dgp.params)
 print("\nUnobserved Confounder DGP Results:")
 print(analysis_confounder.get_summary_table())
 
