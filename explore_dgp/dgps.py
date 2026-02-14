@@ -71,7 +71,7 @@ class LinearDGP(BaseDGP):
     where :math:`\epsilon \sim \mathcal{N}(0, 1)`.
     """
 
-    def generate(self) -> pd.DataFrame:
+    def generate(self, true_effect: float = 0.0) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
         # Define coefficients
@@ -81,7 +81,7 @@ class LinearDGP(BaseDGP):
             "beta_sex": 0.5,
             "beta_rev": -0.0002,
             "beta_unemp": 0.2,
-            "gamma": 0.5,  # Effect of being in 2023 vs 2018
+            "gamma": true_effect,  # Effect of being in 2023 vs 2018
         }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
@@ -114,7 +114,7 @@ class NonLinearDGP(BaseDGP):
     Oaxaca-Blinder might struggle with the linear approximation of these relationships.
     """
 
-    def generate(self) -> pd.DataFrame:
+    def generate(self, true_effect: float = 0.0) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
         self.params = {
@@ -123,7 +123,7 @@ class NonLinearDGP(BaseDGP):
             "beta_age2": 0.001,
             "beta_rev_log": -1.5,
             "beta_inter": 0.01,
-            "gamma": 0.3,
+            "gamma": true_effect,  # Effect of being in 2023 vs 2018
         }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
@@ -163,7 +163,7 @@ class UnobservedConfounderDGP(BaseDGP):
     For example, :math:`Z` could be "General Health Awareness" which increased in 2023.
     """
 
-    def generate(self) -> pd.DataFrame:
+    def generate(self, true_effect: float = 0.0) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
         # Unobserved confounder Z correlated with group (year)
@@ -177,7 +177,7 @@ class UnobservedConfounderDGP(BaseDGP):
             "beta_rev": -0.0002,
             "beta_unemp": 0.2,
             "beta_z": 2.0,  # Strong effect of unobserved variable
-            "gamma": 0.0,  # No true group effect, all difference comes from Z and X
+            "gamma": true_effect,  # No true group effect, all difference comes from Z and X
         }
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
