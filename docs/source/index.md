@@ -9,6 +9,7 @@
 
    readme
    Usage <usage.md>
+   API Reference <api>
    Data <data>
    Notebooks <notebooks>
    CLI usage <cli-usage>
