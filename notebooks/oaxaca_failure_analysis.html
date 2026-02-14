@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Oaxaca-Blinder Failure Modes Analysis &#8212; explore-dgp 0.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/oaxaca_failure_analysis';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CLI Usage" href="../cli-usage.html" />
+    <link rel="prev" title="Analysis Reports" href="../notebooks.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.svg" class="logo__image only-light" alt="explore-dgp 0.0.1 documentation - Home"/>
+    <img src="../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="explore-dgp 0.0.1 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../readme.html">
+    explore-dgp
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../data.html">
+    Data
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../notebooks.html">
+    Notebooks
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../cli-usage.html">
+    CLI usage
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../license.html">
+    License
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../readme.html">
+    explore-dgp
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../data.html">
+    Data
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../notebooks.html">
+    Notebooks
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../cli-usage.html">
+    CLI usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../license.html">
+    License
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Oaxaca-Blinder Failure Modes Analysis</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../notebooks.html" class="nav-link">Analysis Reports</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Oaxaca-Blinder Failure Modes Analysis</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="oaxaca-blinder-failure-modes-analysis">
+<h1>Oaxaca-Blinder Failure Modes Analysis<a class="headerlink" href="#oaxaca-blinder-failure-modes-analysis" title="Link to this heading">#</a></h1>
+<p>This report explores when the Oaxaca-Blinder decomposition model fails to correctly identify causal effects or provides misleading results.</p>
+<p>We use a specific use case: <strong>Percentage of sick leave among workers</strong>, comparing the year <strong>2018</strong> (Group 0) and <strong>2023</strong> (Group 1).</p>
+<section id="use-case-definition">
+<h2>Use Case Definition<a class="headerlink" href="#use-case-definition" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Target ($y$):</strong> Percentage of sick leave.</p></li>
+<li><p><strong>Groups:</strong> 2018 vs 2023.</p></li>
+<li><p><strong>Covariates ($X$):</strong></p>
+<ul>
+<li><p>Age</p></li>
+<li><p>Sex</p></li>
+<li><p>Monthly Revenue</p></li>
+<li><p>Departmental Unemployment Rate</p></li>
+</ul>
+</li>
+</ul>
+<p>We test three Data Generating Processes (DGPs):</p>
+<ol class="arabic simple">
+<li><p><strong>Linear DGP</strong>: Baseline where the model should work well.</p></li>
+<li><p><strong>Non-Linear DGP</strong>: Includes quadratic terms and interactions.</p></li>
+<li><p><strong>Unobserved Confounder DGP</strong>: Includes a hidden variable correlated with the year.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># Add the project root to the path so that explore_dgp can be imported during doc build</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="k">while</span> <span class="n">path</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>  <span class="c1"># noqa: E402</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">explore_dgp.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">OaxacaAnalysis</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">explore_dgp.dgps</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearDGP</span><span class="p">,</span> <span class="n">NonLinearDGP</span><span class="p">,</span> <span class="n">UnobservedConfounderDGP</span>  <span class="c1"># noqa: E402</span>
+
+<span class="c1"># Set plotting style</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-dgp-baseline">
+<h2>1. Linear DGP (Baseline)<a class="headerlink" href="#linear-dgp-baseline" title="Link to this heading">#</a></h2>
+<p>In this scenario, the relationship between covariates and sick leave is perfectly linear.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear_dgp</span> <span class="o">=</span> <span class="n">LinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">df_linear</span> <span class="o">=</span> <span class="n">linear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+
+<span class="n">covariates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">,</span> <span class="s2">&quot;unemployment_rate&quot;</span><span class="p">]</span>
+<span class="n">analysis_linear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_linear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="n">analysis_linear</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear DGP Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear DGP Results:
+                       Value
+Endowment Effect    0.334057
+Coefficient Effect -0.475751
+Interaction Effect  0.004032
+Total Difference   -0.137662
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="non-linear-dgp">
+<h2>2. Non-Linear DGP<a class="headerlink" href="#non-linear-dgp" title="Link to this heading">#</a></h2>
+<p>Here, we introduce $age^2$ and an interaction between $age$ and $unemployment_rate$.
+Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonlinear_dgp</span> <span class="o">=</span> <span class="n">NonLinearDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">df_nonlinear</span> <span class="o">=</span> <span class="n">nonlinear_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+
+<span class="n">analysis_nonlinear</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_nonlinear</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Non-Linear DGP Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Non-Linear DGP Results:
+                       Value
+Endowment Effect    0.270041
+Coefficient Effect -0.094556
+Interaction Effect  0.084508
+Total Difference    0.259992
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unobserved-confounder-dgp">
+<h2>3. Unobserved Confounder DGP<a class="headerlink" href="#unobserved-confounder-dgp" title="Link to this heading">#</a></h2>
+<p>In this case, an unobserved variable $Z$ (e.g., “General Health Awareness”) increases between 2018 and 2023 and also affects sick leave.
+Oaxaca-Blinder cannot account for $Z$, so its effect will be mixed into either the “Coefficient” (unexplained) part or incorrectly attributed to other covariates if they are correlated with $Z$.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">confounder_dgp</span> <span class="o">=</span> <span class="n">UnobservedConfounderDGP</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">df_confounder</span> <span class="o">=</span> <span class="n">confounder_dgp</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+
+<span class="n">analysis_confounder</span> <span class="o">=</span> <span class="n">OaxacaAnalysis</span><span class="p">(</span><span class="n">df_confounder</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="n">analysis_confounder</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unobserved Confounder DGP Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Unobserved Confounder DGP Results:
+                       Value
+Endowment Effect    0.265788
+Coefficient Effect -1.909126
+Interaction Effect  0.042915
+Total Difference   -1.600422
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparison-and-visualization">
+<h2>Comparison and Visualization<a class="headerlink" href="#comparison-and-visualization" title="Link to this heading">#</a></h2>
+<p>We compare the decomposition across the three scenarios.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Linear&quot;</span><span class="p">:</span> <span class="n">analysis_linear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Non-Linear&quot;</span><span class="p">:</span> <span class="n">analysis_nonlinear</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Confounder&quot;</span><span class="p">:</span> <span class="n">analysis_confounder</span><span class="o">.</span><span class="n">get_summary_table</span><span class="p">()[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># Drop &#39;Total Difference&#39; from the stacked bar chart to avoid doubling the height</span>
+<span class="n">df_results_plot</span> <span class="o">=</span> <span class="n">df_results</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Total Difference&quot;</span><span class="p">])</span>
+
+<span class="n">df_results_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Oaxaca-Blinder Decomposition across different DGPs&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Contribution to Difference in Means&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Effect Type&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9222afbb1305c19d6d26f022c2d10da50a0f9912756b43bbf2b0ca329017f162.png" src="../_images/9222afbb1305c19d6d26f022c2d10da50a0f9912756b43bbf2b0ca329017f162.png" />
+</div>
+</div>
+</section>
+<section id="discussion-of-findings">
+<h2>Discussion of Findings<a class="headerlink" href="#discussion-of-findings" title="Link to this heading">#</a></h2>
+<section id="linear-dgp">
+<h3>Linear DGP<a class="headerlink" href="#linear-dgp" title="Link to this heading">#</a></h3>
+<p>The model correctly decomposes the difference. The “Endowment Effect” captures differences in covariates, while the “Coefficient Effect” captures the explicit group effect ($\gamma$) we introduced.</p>
+</section>
+<section id="id1">
+<h3>Non-Linear DGP<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>When relationships are non-linear (like $age^2$), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of $X$ doesn’t fully capture the impact of the non-linear transformation.</p>
+</section>
+<section id="id2">
+<h3>Unobserved Confounder DGP<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>This is the most critical failure mode. Even if there is no “true” group effect ($\gamma=0$), the model shows a large “Coefficient Effect” (or “Endowment” if $Z$ is correlated with $X$). This is because the unobserved variable $Z$ is driving the change, but the model attributes it to the groups being “different” in how they translate $X$ to $Y$, or to the groups having different $X$ if $Z$ is correlated with $X$.</p>
+<p>In our simulation, we saw a significant Coefficient Effect even though we set the true $\gamma=0$, because $Z$ was higher in 2023 and had a positive effect on sick leave.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../notebooks.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Analysis Reports</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cli-usage.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">CLI Usage</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-definition">Use Case Definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-dgp-baseline">1. Linear DGP (Baseline)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-linear-dgp">2. Non-Linear DGP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unobserved-confounder-dgp">3. Unobserved Confounder DGP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-and-visualization">Comparison and Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-findings">Discussion of Findings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-dgp">Linear DGP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Non-Linear DGP</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Unobserved Confounder DGP</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Matthieu Doutreligne &lt;matt.dout@gmail.com&gt;.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
