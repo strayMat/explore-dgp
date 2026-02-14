@@ -43,14 +43,13 @@ class OaxacaAnalysis:
         if self.model is None:
             raise ModelNotRunError
 
-        res = self.model.three_fold()
+        res = self.model.two_fold()
         params = res.params
 
         summary = {
             "Endowment Effect": params[0],
             "Coefficient Effect": params[1],
-            "Interaction Effect": params[2],
-            "Total Difference": params[3],
+            "Total Difference": params[2],
         }
 
         return pd.Series(summary).to_frame(name="Value")
