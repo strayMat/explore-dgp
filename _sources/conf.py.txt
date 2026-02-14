@@ -48,10 +48,11 @@ extensions = [
     "myst_nb",  # MyST-NB for notebooks and .md parsing
     "sphinx.ext.autodoc",  # Include documentation from docstrings (https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html)
     "sphinx.ext.autosummary",  # Generate autodoc summaries (https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html)
-    "sphinx.ext.intersphinx",  # Link to other projects’ documentation (https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
+    "sphinx.ext.intersphinx",  # Link to other projects' documentation (https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
     "sphinx.ext.viewcode",  # Add documentation links to/from source code (https://www.sphinx-doc.org/en/master/usage/extensions/viewcode.html)
     "sphinx.ext.autosectionlabel",  # Allow reference sections using its title (https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html)
     "sphinx.ext.napoleon",  # Support for NumPy and Google style docstrings (https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+    "sphinx.ext.mathjax",  # Math rendering support for LaTeX expressions (https://www.sphinx-doc.org/en/master/usage/extensions/math.html)
     "sphinx_click",  # Automatic documentation of click based CLI (https://github.com/click-contrib/sphinx-click)
 ]
 
@@ -70,7 +71,7 @@ exclude_patterns: List[str] = ["_build", "Thumbs.db", ".DS_Store", ".venv"]
 # Sphinx configs
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-html_favicon = "_static/favicon.ico"
+# html_favicon = "_static/favicon.ico"
 html_theme_options = {
     "logo": {
         "image_light": "logo-light.svg",
@@ -102,6 +103,7 @@ nb_execution_mode = "auto"  # Execute notebooks during build if they have change
 nb_execution_timeout = 60
 nb_custom_formats = {".py": ["jupytext.reads", {"fmt": "py:percent"}]}
 nb_execution_excludepatterns = ["conf.py"]
+myst_enable_extensions = ["dollarmath", "amsmath"]
 
 # Prefix document path to section labels, to use:
 # `path/to/file:heading` instead of just `heading`

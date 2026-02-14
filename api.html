@@ -42,6 +42,8 @@
     <script src="_static/documentation_options.js?v=d45e8c67"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -407,7 +409,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="api-reference">
+  <section class="tex2jax_ignore mathjax_ignore" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h1>
 <p>This section contains the auto-generated API documentation for the explore_dgp package.</p>
 <section id="module-explore_dgp.analysis">
@@ -555,9 +557,10 @@
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">LinearDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#LinearDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.LinearDGP" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#explore_dgp.dgps.BaseDGP" title="explore_dgp.dgps.BaseDGP"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDGP</span></code></a></p>
 <p>Linear Data Generating Process.</p>
-<p>The target variable $y$ (percentage of sick leave) is a linear combination of covariates:</p>
-<p>$$y = beta_0 + beta_{age} cdot age + beta_{sex} cdot sex + beta_{rev} cdot revenue + beta_{unemp} cdot unemp + gamma cdot group + epsilon$$</p>
-<p>where $epsilon sim mathcal{N}(0, 1)$.</p>
+<p>The target variable <span class="math notranslate nohighlight">\(y\)</span> (percentage of sick leave) is a linear combination of covariates:</p>
+<div class="math notranslate nohighlight">
+\[y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon \sim \mathcal{N}(0, 1)\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -584,8 +587,9 @@
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">NonLinearDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#NonLinearDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.NonLinearDGP" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#explore_dgp.dgps.BaseDGP" title="explore_dgp.dgps.BaseDGP"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDGP</span></code></a></p>
 <p>Non-Linear Data Generating Process.</p>
-<p>The target variable $y$ includes non-linear terms and interactions:</p>
-<p>$$y = beta_0 + beta_{age} cdot age + beta_{age2} cdot age^2 + beta_{rev} cdot log(revenue) + beta_{inter} cdot age cdot unemp + gamma cdot group + epsilon$$</p>
+<p>The target variable <span class="math notranslate nohighlight">\(y\)</span> includes non-linear terms and interactions:</p>
+<div class="math notranslate nohighlight">
+\[y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon\]</div>
 <p>Oaxaca-Blinder might struggle with the linear approximation of these relationships.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -613,13 +617,15 @@
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">UnobservedConfounderDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#UnobservedConfounderDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.UnobservedConfounderDGP" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#explore_dgp.dgps.BaseDGP" title="explore_dgp.dgps.BaseDGP"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDGP</span></code></a></p>
 <p>Data Generating Process with an Unobserved Confounder.</p>
-<p>A hidden variable $Z$ affects both the group assignment (implicitly via year characteristics)
-and the outcome $y$:</p>
-<p>$$Z sim mathcal{N}(0, 1)$$
-$$y = beta_0 + Xbeta + beta_z cdot Z + gamma cdot group + epsilon$$</p>
-<p>In this scenario, $Z$ is correlated with the <cite>year</cite> but not included in the model covariates.
-Oaxaca-Blinder will attribute the effect of $Z$ to the group or other covariates incorrectly.</p>
-<p>For example, $Z$ could be “General Health Awareness” which increased in 2023.</p>
+<p>A hidden variable <span class="math notranslate nohighlight">\(Z\)</span> affects both the group assignment (implicitly via year characteristics)
+and the outcome <span class="math notranslate nohighlight">\(y\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[Z \sim \mathcal{N}(0, 1)\]</div>
+<div class="math notranslate nohighlight">
+\[y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon\]</div>
+<p>In this scenario, <span class="math notranslate nohighlight">\(Z\)</span> is correlated with the <cite>year</cite> but not included in the model covariates.
+Oaxaca-Blinder will attribute the effect of <span class="math notranslate nohighlight">\(Z\)</span> to the group or other covariates incorrectly.</p>
+<p>For example, <span class="math notranslate nohighlight">\(Z\)</span> could be “General Health Awareness” which increased in 2023.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

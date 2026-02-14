@@ -450,10 +450,11 @@ extensions = [
     &quot;myst_nb&quot;,  # MyST-NB for notebooks and .md parsing
     &quot;sphinx.ext.autodoc&quot;,  # Include documentation from docstrings (https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html)
     &quot;sphinx.ext.autosummary&quot;,  # Generate autodoc summaries (https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html)
-    &quot;sphinx.ext.intersphinx&quot;,  # Link to other projects’ documentation (https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
+    &quot;sphinx.ext.intersphinx&quot;,  # Link to other projects&#39; documentation (https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html)
     &quot;sphinx.ext.viewcode&quot;,  # Add documentation links to/from source code (https://www.sphinx-doc.org/en/master/usage/extensions/viewcode.html)
     &quot;sphinx.ext.autosectionlabel&quot;,  # Allow reference sections using its title (https://www.sphinx-doc.org/en/master/usage/extensions/autosectionlabel.html)
     &quot;sphinx.ext.napoleon&quot;,  # Support for NumPy and Google style docstrings (https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+    &quot;sphinx.ext.mathjax&quot;,  # Math rendering support for LaTeX expressions (https://www.sphinx-doc.org/en/master/usage/extensions/math.html)
     &quot;sphinx_click&quot;,  # Automatic documentation of click based CLI (https://github.com/click-contrib/sphinx-click)
 ]
 
@@ -472,7 +473,7 @@ exclude_patterns: List[str] = [&quot;_build&quot;, &quot;Thumbs.db&quot;, &quot;
 # Sphinx configs
 html_theme = &quot;pydata_sphinx_theme&quot;
 html_static_path = [&quot;_static&quot;]
-html_favicon = &quot;_static/favicon.ico&quot;
+# html_favicon = &quot;_static/favicon.ico&quot;
 html_theme_options = {
     &quot;logo&quot;: {
         &quot;image_light&quot;: &quot;logo-light.svg&quot;,
@@ -504,6 +505,7 @@ nb_execution_mode = &quot;auto&quot;  # Execute notebooks during build if they h
 nb_execution_timeout = 60
 nb_custom_formats = {&quot;.py&quot;: [&quot;jupytext.reads&quot;, {&quot;fmt&quot;: &quot;py:percent&quot;}]}
 nb_execution_excludepatterns = [&quot;conf.py&quot;]
+myst_enable_extensions = [&quot;dollarmath&quot;, &quot;amsmath&quot;]
 
 # Prefix document path to section labels, to use:
 # `path/to/file:heading` instead of just `heading`

@@ -475,11 +475,13 @@
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Linear Data Generating Process.</span>
 
-<span class="sd">    The target variable $y$ (percentage of sick leave) is a linear combination of covariates:</span>
+<span class="sd">    The target variable :math:`y` (percentage of sick leave) is a linear combination of covariates:</span>
 
-<span class="sd">    $$y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon$$</span>
+<span class="sd">    .. math::</span>
 
-<span class="sd">    where $\epsilon \sim \mathcal{N}(0, 1)$.</span>
+<span class="sd">        y = \beta_0 + \beta_{age} \cdot age + \beta_{sex} \cdot sex + \beta_{rev} \cdot revenue + \beta_{unemp} \cdot unemp + \gamma \cdot group + \epsilon</span>
+
+<span class="sd">    where :math:`\epsilon \sim \mathcal{N}(0, 1)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LinearDGP.generate">
@@ -520,9 +522,11 @@
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Non-Linear Data Generating Process.</span>
 
-<span class="sd">    The target variable $y$ includes non-linear terms and interactions:</span>
+<span class="sd">    The target variable :math:`y` includes non-linear terms and interactions:</span>
 
-<span class="sd">    $$y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon$$</span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">        y = \beta_0 + \beta_{age} \cdot age + \beta_{age2} \cdot age^2 + \beta_{rev} \cdot \log(revenue) + \beta_{inter} \cdot age \cdot unemp + \gamma \cdot group + \epsilon</span>
 
 <span class="sd">    Oaxaca-Blinder might struggle with the linear approximation of these relationships.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -563,16 +567,21 @@
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Data Generating Process with an Unobserved Confounder.</span>
 
-<span class="sd">    A hidden variable $Z$ affects both the group assignment (implicitly via year characteristics)</span>
-<span class="sd">    and the outcome $y$:</span>
+<span class="sd">    A hidden variable :math:`Z` affects both the group assignment (implicitly via year characteristics)</span>
+<span class="sd">    and the outcome :math:`y`:</span>
 
-<span class="sd">    $$Z \sim \mathcal{N}(0, 1)$$</span>
-<span class="sd">    $$y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon$$</span>
+<span class="sd">    .. math::</span>
 
-<span class="sd">    In this scenario, $Z$ is correlated with the `year` but not included in the model covariates.</span>
-<span class="sd">    Oaxaca-Blinder will attribute the effect of $Z$ to the group or other covariates incorrectly.</span>
+<span class="sd">        Z \sim \mathcal{N}(0, 1)</span>
 
-<span class="sd">    For example, $Z$ could be &quot;General Health Awareness&quot; which increased in 2023.</span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">        y = \beta_0 + X\beta + \beta_z \cdot Z + \gamma \cdot group + \epsilon</span>
+
+<span class="sd">    In this scenario, :math:`Z` is correlated with the `year` but not included in the model covariates.</span>
+<span class="sd">    Oaxaca-Blinder will attribute the effect of :math:`Z` to the group or other covariates incorrectly.</span>
+
+<span class="sd">    For example, :math:`Z` could be &quot;General Health Awareness&quot; which increased in 2023.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UnobservedConfounderDGP.generate">

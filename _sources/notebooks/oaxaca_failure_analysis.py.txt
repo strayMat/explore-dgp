@@ -6,9 +6,9 @@
 # We use a specific use case: **Percentage of sick leave among workers**, comparing the year **2018** (Group 0) and **2023** (Group 1).
 #
 # ## Use Case Definition
-# - **Target ($y$):** Percentage of sick leave.
+# - **Target (:math:`y`):** Percentage of sick leave.
 # - **Groups:** 2018 vs 2023.
-# - **Covariates ($X$):**
+# - **Covariates (:math:`X`):**
 #   - Age
 #   - Sex
 #   - Monthly Revenue
@@ -56,7 +56,7 @@ print(analysis_linear.get_summary_table())
 
 # %% [markdown]
 # ## 2. Non-Linear DGP
-# Here, we introduce $age^2$ and an interaction between $age$ and $unemployment\_rate$.
+# Here, we introduce :math:`age^2` and an interaction between :math:`age` and :math:`unemployment\_rate`.
 # Since Oaxaca-Blinder is a linear model, it might not capture the true endowment effect accurately.
 
 # %%
@@ -70,8 +70,8 @@ print(analysis_nonlinear.get_summary_table())
 
 # %% [markdown]
 # ## 3. Unobserved Confounder DGP
-# In this case, an unobserved variable $Z$ (e.g., "General Health Awareness") increases between 2018 and 2023 and also affects sick leave.
-# Oaxaca-Blinder cannot account for $Z$, so its effect will be mixed into either the "Coefficient" (unexplained) part or incorrectly attributed to other covariates if they are correlated with $Z$.
+# In this case, an unobserved variable :math:`Z` (e.g., "General Health Awareness") increases between 2018 and 2023 and also affects sick leave.
+# Oaxaca-Blinder cannot account for :math:`Z`, so its effect will be mixed into either the "Coefficient" (unexplained) part or incorrectly attributed to other covariates if they are correlated with :math:`Z`.
 
 # %%
 confounder_dgp = UnobservedConfounderDGP(n_samples=5000)
@@ -109,12 +109,12 @@ plt.show()
 # ## Discussion of Findings
 #
 # ### Linear DGP
-# The model correctly decomposes the difference. The "Endowment Effect" captures differences in covariates, while the "Coefficient Effect" captures the explicit group effect ($\gamma$) we introduced.
+# The model correctly decomposes the difference. The "Endowment Effect" captures differences in covariates, while the "Coefficient Effect" captures the explicit group effect (:math:`\gamma`) we introduced.
 #
 # ### Non-Linear DGP
-# When relationships are non-linear (like $age^2$), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of $X$ doesn't fully capture the impact of the non-linear transformation.
+# When relationships are non-linear (like :math:`age^2`), the linear Oaxaca-Blinder model provides an approximation. The interaction effect might become more significant, or the endowment effect might be biased because the mean of :math:`X` doesn't fully capture the impact of the non-linear transformation.
 #
 # ### Unobserved Confounder DGP
-# This is the most critical failure mode. Even if there is no "true" group effect ($\gamma=0$), the model shows a large "Coefficient Effect" (or "Endowment" if $Z$ is correlated with $X$). This is because the unobserved variable $Z$ is driving the change, but the model attributes it to the groups being "different" in how they translate $X$ to $Y$, or to the groups having different $X$ if $Z$ is correlated with $X$.
+# This is the most critical failure mode. Even if there is no "true" group effect (:math:`\gamma=0`), the model shows a large "Coefficient Effect" (or "Endowment" if :math:`Z` is correlated with :math:`X`). This is because the unobserved variable :math:`Z` is driving the change, but the model attributes it to the groups being "different" in how they translate :math:`X` to :math:`Y`, or to the groups having different :math:`X` if :math:`Z` is correlated with :math:`X`.
 #
-# In our simulation, we saw a significant Coefficient Effect even though we set the true $\gamma=0$, because $Z$ was higher in 2023 and had a positive effect on sick leave.
+# In our simulation, we saw a significant Coefficient Effect even though we set the true :math:`\gamma=0`, because :math:`Z` was higher in 2023 and had a positive effect on sick leave.
