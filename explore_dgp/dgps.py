@@ -57,6 +57,12 @@ class BaseDGP(ABC):
         """Generates the full dataset including the target variable y."""
         pass
 
+    @property
+    @abstractmethod
+    def true_group_effect(self) -> float:
+        """Returns the true causal effect of the group (year)."""
+        pass
+
 
 class LinearDGP(BaseDGP):
     r"""
@@ -69,6 +75,10 @@ class LinearDGP(BaseDGP):
     where $\epsilon \sim \mathcal{N}(0, 1)$.
     """
 
+    @property
+    def true_group_effect(self) -> float:
+        return 0.5
+
     def generate(self) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
@@ -78,7 +88,7 @@ class LinearDGP(BaseDGP):
         beta_sex = 0.5
         beta_rev = -0.0002
         beta_unemp = 0.2
-        gamma = 0.5  # Effect of being in 2023 vs 2018
+        gamma = self.true_group_effect  # Effect of being in 2023 vs 2018
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 
@@ -108,6 +118,10 @@ class NonLinearDGP(BaseDGP):
     Oaxaca-Blinder might struggle with the linear approximation of these relationships.
     """
 
+    @property
+    def true_group_effect(self) -> float:
+        return 0.3
+
     def generate(self) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
@@ -116,7 +130,7 @@ class NonLinearDGP(BaseDGP):
         beta_age2 = 0.001
         beta_rev_log = -1.5
         beta_inter = 0.01
-        gamma = 0.3
+        gamma = self.true_group_effect
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 
@@ -150,6 +164,10 @@ class UnobservedConfounderDGP(BaseDGP):
     For example, $Z$ could be "General Health Awareness" which increased in 2023.
     """
 
+    @property
+    def true_group_effect(self) -> float:
+        return 0.0
+
     def generate(self) -> pd.DataFrame:
         df = self.generate_base_covariates()
 
@@ -163,7 +181,7 @@ class UnobservedConfounderDGP(BaseDGP):
         beta_rev = -0.0002
         beta_unemp = 0.2
         beta_z = 2.0  # Strong effect of unobserved variable
-        gamma = 0.0  # No true group effect, all difference comes from Z and X
+        gamma = self.true_group_effect  # No true group effect, all difference comes from Z and X
 
         noise = self.rng.normal(0, 0.5, size=self.n_samples)
 

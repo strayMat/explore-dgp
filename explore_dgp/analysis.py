@@ -19,14 +19,17 @@ class OaxacaAnalysis:
         self.covariates = covariates
         self.group_col = group_col
         self.model: Any = None
+        self.results: Any = None
 
-    def run(self, hasconst: bool = False, swap: bool = False) -> Any:
+    def run(self, hasconst: bool = False, swap: bool = False, std: bool = True, n: int = 500) -> Any:
         """
         Runs the Oaxaca-Blinder decomposition.
 
         Args:
             hasconst: If False, statsmodels will add a constant to the covariates.
             swap: If True, swaps the groups.
+            std: If True, compute standard errors via bootstrap.
+            n: Number of bootstrap iterations.
         """
         y = self.df[self.target]
         # OaxacaBlinder expects the bifurcate column to be in exog
@@ -34,26 +37,37 @@ class OaxacaAnalysis:
 
         # statsmodels OaxacaBlinder
         self.model = OaxacaBlinder(y, X, self.group_col, hasconst=hasconst, swap=swap)
+        self.results = self.model.three_fold(std=std, n=n)
         return self.model
 
     def get_summary_table(self) -> pd.DataFrame:
         """
-        Returns a summary of the decomposition.
+        Returns a summary of the decomposition including 95% CI if available.
         """
-        if self.model is None:
+        if self.model is None or self.results is None:
             raise ModelNotRunError
 
-        res = self.model.three_fold()
-        params = res.params
+        params = self.results.params
+        std = getattr(self.results, "std", None)
 
-        summary = {
-            "Endowment Effect": params[0],
-            "Coefficient Effect": params[1],
-            "Interaction Effect": params[2],
-            "Total Difference": params[3],
+        data = {
+            "Estimate": [params[0], params[1], params[2], params[3]],
         }
 
-        return pd.Series(summary).to_frame(name="Value")
+        if std is not None:
+            # std usually has 3 elements: endowment, coefficient, interaction
+            # We add None for the Total Difference (gap) if not available
+            full_std = [*list(std), None]
+            data["Std Error"] = full_std
+            data["CI 95% Lower"] = [
+                params[i] - 1.96 * full_std[i] if full_std[i] is not None else None for i in range(4)
+            ]
+            data["CI 95% Upper"] = [
+                params[i] + 1.96 * full_std[i] if full_std[i] is not None else None for i in range(4)
+            ]
+
+        index = ["Endowment Effect", "Coefficient Effect", "Interaction Effect", "Total Difference"]
+        return pd.DataFrame(data, index=index)
 
     def get_coefficient_details(self) -> pd.DataFrame:
         """

@@ -43,6 +43,8 @@ sns.set_theme(style="whitegrid")
 # %% [markdown]
 # ## 1. Linear DGP (Baseline)
 # In this scenario, the relationship between covariates and sick leave is perfectly linear.
+# We use `swap=False` to keep the natural ordering (2018 as reference).
+# The expected Coefficient Effect should be around $-\gamma = -0.5$.
 
 # %%
 linear_dgp = LinearDGP(n_samples=5000)
@@ -50,7 +52,7 @@ df_linear = linear_dgp.generate()
 
 covariates = ["age", "sex", "revenue", "unemployment_rate"]
 analysis_linear = OaxacaAnalysis(df_linear, "sick_leave", covariates, "group")
-analysis_linear.run()
+analysis_linear.run(std=True, n=500, swap=False)
 print("Linear DGP Results:")
 print(analysis_linear.get_summary_table())
 
@@ -64,7 +66,7 @@ nonlinear_dgp = NonLinearDGP(n_samples=5000)
 df_nonlinear = nonlinear_dgp.generate()
 
 analysis_nonlinear = OaxacaAnalysis(df_nonlinear, "sick_leave", covariates, "group")
-analysis_nonlinear.run()
+analysis_nonlinear.run(std=True, n=500, swap=False)
 print("Non-Linear DGP Results:")
 print(analysis_nonlinear.get_summary_table())
 
@@ -78,7 +80,7 @@ confounder_dgp = UnobservedConfounderDGP(n_samples=5000)
 df_confounder = confounder_dgp.generate()
 
 analysis_confounder = OaxacaAnalysis(df_confounder, "sick_leave", covariates, "group")
-analysis_confounder.run()
+analysis_confounder.run(std=True, n=500, swap=False)
 print("Unobserved Confounder DGP Results:")
 print(analysis_confounder.get_summary_table())
 
@@ -89,9 +91,9 @@ print(analysis_confounder.get_summary_table())
 
 # %%
 results = {
-    "Linear": analysis_linear.get_summary_table()["Value"],
-    "Non-Linear": analysis_nonlinear.get_summary_table()["Value"],
-    "Confounder": analysis_confounder.get_summary_table()["Value"],
+    "Linear": analysis_linear.get_summary_table()["Estimate"],
+    "Non-Linear": analysis_nonlinear.get_summary_table()["Estimate"],
+    "Confounder": analysis_confounder.get_summary_table()["Estimate"],
 }
 df_results = pd.DataFrame(results).T
 
@@ -103,6 +105,62 @@ plt.title("Oaxaca-Blinder Decomposition across different DGPs")
 plt.ylabel("Contribution to Difference in Means")
 plt.legend(title="Effect Type")
 plt.xticks(rotation=0)
+plt.show()
+
+# %% [markdown]
+# ## Inference and Causal Effect Detection
+#
+# We now visualize the estimated components (Coefficient and Interaction effects) with their 95% confidence intervals.
+# We overlay the **True Group Effect** (red point) to see if the model successfully detects it.
+# Note: Endowment effect is omitted as per requirements.
+
+# %%
+fig, ax = plt.subplots(figsize=(12, 7))
+
+all_analyses = {
+    "Linear": (analysis_linear, linear_dgp),
+    "Non-Linear": (analysis_nonlinear, nonlinear_dgp),
+    "Confounder": (analysis_confounder, confounder_dgp),
+}
+
+components = ["Coefficient Effect", "Interaction Effect"]
+colors = sns.color_palette("muted", len(components))
+x_ticks = []
+x_labels = []
+
+for i, (name, (analysis, dgp)) in enumerate(all_analyses.items()):
+    summary = analysis.get_summary_table()
+    # We compare with -gamma because Oaxaca gap is Mean(G0) - Mean(G1)
+    # and our gamma is defined as Mean(G1) - Mean(G0)
+    true_effect = -dgp.true_group_effect
+
+    for j, comp in enumerate(components):
+        pos = i + (j - 0.5) * 0.2
+        est = summary.loc[comp, "Estimate"]
+        lower = summary.loc[comp, "CI 95% Lower"]
+        upper = summary.loc[comp, "CI 95% Upper"]
+
+        ax.errorbar(
+            pos,
+            est,
+            yerr=[[est - lower], [upper - est]],
+            fmt="o",
+            capsize=5,
+            label=comp if i == 0 else "",
+            color=colors[j],
+        )
+
+    # Plot true effect
+    ax.scatter(i, true_effect, color="red", s=100, zorder=5, label="True Group Effect" if i == 0 else "")
+    x_ticks.append(i)
+    x_labels.append(name)
+
+ax.set_xticks(x_ticks)
+ax.set_xticklabels(x_labels)
+ax.set_ylabel("Estimated Effect Size")
+ax.set_title("Oaxaca-Blinder Inference Results vs True Group Effect")
+ax.legend()
+plt.axhline(0, color="black", linestyle="--", alpha=0.3)
 plt.show()
 
 # %% [markdown]
