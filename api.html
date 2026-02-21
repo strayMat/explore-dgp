@@ -528,6 +528,69 @@ If provided, it will be included in the summary.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="explore_dgp.analysis.AKMAnalysis">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.analysis.</span></span><span class="sig-name descname"><span class="pre">AKMAnalysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'worker_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firm_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'firm_id'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/analysis.html#AKMAnalysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.analysis.AKMAnalysis" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Wrapper for AKM variance decomposition using pyfixest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>)</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>covariates</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>)</p></li>
+<li><p><strong>worker_id_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>firm_id_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="explore_dgp.analysis.AKMAnalysis.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'worker_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firm_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'firm_id'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/analysis.html#AKMAnalysis.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.analysis.AKMAnalysis.__init__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>DataFrame</em>)</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>covariates</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>]</em>)</p></li>
+<li><p><strong>worker_id_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>firm_id_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="explore_dgp.analysis.AKMAnalysis.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/analysis.html#AKMAnalysis.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.analysis.AKMAnalysis.run" title="Link to this definition">#</a></dt>
+<dd><p>Runs the AKM estimation using pyfixest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="explore_dgp.analysis.AKMAnalysis.variance_decomposition">
+<span class="sig-name descname"><span class="pre">variance_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_worker_fe_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_firm_fe_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/analysis.html#AKMAnalysis.variance_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.analysis.AKMAnalysis.variance_decomposition" title="Link to this definition">#</a></dt>
+<dd><p>Performs the AKM variance decomposition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_worker_fe_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Column name for true worker fixed effects (optional).</p></li>
+<li><p><strong>true_firm_fe_col</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Column name for true firm fixed effects (optional).</p></li>
+<li><p><strong>true_beta</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>] </em><em>| </em><em>None</em>) – Dictionary of true coefficients for covariates (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-explore_dgp.dgps">
 <span id="data-generating-processes"></span><h2>Data Generating Processes<a class="headerlink" href="#module-explore_dgp.dgps" title="Link to this heading">#</a></h2>
@@ -589,8 +652,8 @@ If provided, it will be included in the summary.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="explore_dgp.dgps.LinearDGP">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">LinearDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#LinearDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.LinearDGP" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="explore_dgp.dgps.ObLinearDGP">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">ObLinearDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#ObLinearDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.ObLinearDGP" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#explore_dgp.dgps.BaseDGP" title="explore_dgp.dgps.BaseDGP"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDGP</span></code></a></p>
 <p>Linear Data Generating Process.</p>
 <p>The target variable <span class="math notranslate nohighlight">\(y\)</span> (percentage of sick leave) is a linear combination of covariates:</p>
@@ -606,12 +669,65 @@ If provided, it will be included in the summary.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="explore_dgp.dgps.LinearDGP.generate">
-<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_effect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#LinearDGP.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.LinearDGP.generate" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="explore_dgp.dgps.ObLinearDGP.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_effect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#ObLinearDGP.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.ObLinearDGP.generate" title="Link to this definition">#</a></dt>
 <dd><p>Generates the full dataset including the target variable y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>true_effect</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="explore_dgp.dgps.AKMDGP">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">explore_dgp.dgps.</span></span><span class="sig-name descname"><span class="pre">AKMDGP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_firms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#AKMDGP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.AKMDGP" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#explore_dgp.dgps.BaseDGP" title="explore_dgp.dgps.BaseDGP"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDGP</span></code></a></p>
+<p>Data Generating Process for AKM (Abowd, Kramarz, and Margolis) model.
+Estimates worker and firm fixed effects.</p>
+<p>The target variable <span class="math notranslate nohighlight">\(y_{it}\)</span> (percentage of sick leave) is:</p>
+<div class="math notranslate nohighlight">
+\[y_{it} = \alpha + X_{it}\beta + \theta_i + \psi_{J(i,t)} + \epsilon_{it}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(\theta_i\)</span> is the worker fixed effect.
+- <span class="math notranslate nohighlight">\(\psi_{J(i,t)}\)</span> is the firm fixed effect for the firm <span class="math notranslate nohighlight">\(J(i,t)\)</span> worker <span class="math notranslate nohighlight">\(i\)</span> works for at time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_workers</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>n_firms</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>n_years</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="explore_dgp.dgps.AKMDGP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_firms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#AKMDGP.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.AKMDGP.__init__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_workers</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>n_firms</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>n_years</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="explore_dgp.dgps.AKMDGP.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endogeneity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/explore_dgp/dgps.html#AKMDGP.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#explore_dgp.dgps.AKMDGP.generate" title="Link to this definition">#</a></dt>
+<dd><p>Generates longitudinal data for workers and firms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>endogeneity</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, revenue depends on worker and firm fixed effects.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>DataFrame</em></p>
@@ -767,6 +883,12 @@ Oaxaca-Blinder will attribute the effect of <span class="math notranslate nohigh
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.analysis.OaxacaAnalysis.get_coefficient_details"><code class="docutils literal notranslate"><span class="pre">OaxacaAnalysis.get_coefficient_details()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.analysis.AKMAnalysis"><code class="docutils literal notranslate"><span class="pre">AKMAnalysis</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.analysis.AKMAnalysis.__init__"><code class="docutils literal notranslate"><span class="pre">AKMAnalysis.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.analysis.AKMAnalysis.run"><code class="docutils literal notranslate"><span class="pre">AKMAnalysis.run()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.analysis.AKMAnalysis.variance_decomposition"><code class="docutils literal notranslate"><span class="pre">AKMAnalysis.variance_decomposition()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-explore_dgp.dgps">Data Generating Processes</a><ul class="nav section-nav flex-column">
@@ -776,8 +898,13 @@ Oaxaca-Blinder will attribute the effect of <span class="math notranslate nohigh
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.BaseDGP.generate"><code class="docutils literal notranslate"><span class="pre">BaseDGP.generate()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.LinearDGP"><code class="docutils literal notranslate"><span class="pre">LinearDGP</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.LinearDGP.generate"><code class="docutils literal notranslate"><span class="pre">LinearDGP.generate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.ObLinearDGP"><code class="docutils literal notranslate"><span class="pre">ObLinearDGP</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.ObLinearDGP.generate"><code class="docutils literal notranslate"><span class="pre">ObLinearDGP.generate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.AKMDGP"><code class="docutils literal notranslate"><span class="pre">AKMDGP</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.AKMDGP.__init__"><code class="docutils literal notranslate"><span class="pre">AKMDGP.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.AKMDGP.generate"><code class="docutils literal notranslate"><span class="pre">AKMDGP.generate()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explore_dgp.dgps.NonLinearDGP"><code class="docutils literal notranslate"><span class="pre">NonLinearDGP</span></code></a><ul class="nav section-nav flex-column">

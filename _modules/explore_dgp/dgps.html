@@ -501,9 +501,10 @@
 
 
 
-<div class="viewcode-block" id="LinearDGP">
-<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.LinearDGP">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LinearDGP</span><span class="p">(</span><span class="n">BaseDGP</span><span class="p">):</span>
+<span class="c1"># Oaxaca Blinder DGPs</span>
+<div class="viewcode-block" id="ObLinearDGP">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.ObLinearDGP">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObLinearDGP</span><span class="p">(</span><span class="n">BaseDGP</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Linear Data Generating Process.</span>
 
@@ -516,8 +517,8 @@
 <span class="sd">    where :math:`\epsilon \sim \mathcal{N}(0, 1)`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LinearDGP.generate">
-<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.LinearDGP.generate">[docs]</a>
+<div class="viewcode-block" id="ObLinearDGP.generate">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.ObLinearDGP.generate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_effect</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_base_covariates</span><span class="p">()</span>
 
@@ -543,6 +544,133 @@
             <span class="o">+</span> <span class="n">noise</span>
         <span class="p">)</span>
         <span class="c1"># Clip to ensure percentage-like behavior (though it&#39;s a toy model)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">df</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AKMDGP">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.AKMDGP">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AKMDGP</span><span class="p">(</span><span class="n">BaseDGP</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Data Generating Process for AKM (Abowd, Kramarz, and Margolis) model.</span>
+<span class="sd">    Estimates worker and firm fixed effects.</span>
+
+<span class="sd">    The target variable :math:`y_{it}` (percentage of sick leave) is:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        y_{it} = \alpha + X_{it}\beta + \theta_i + \psi_{J(i,t)} + \epsilon_{it}</span>
+
+<span class="sd">    where:</span>
+<span class="sd">    - :math:`\theta_i` is the worker fixed effect.</span>
+<span class="sd">    - :math:`\psi_{J(i,t)}` is the firm fixed effect for the firm :math:`J(i,t)` worker :math:`i` works for at time :math:`t`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AKMDGP.__init__">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.AKMDGP.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">n_firms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+        <span class="n">n_years</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_workers</span> <span class="o">*</span> <span class="n">n_years</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">=</span> <span class="n">n_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_firms</span> <span class="o">=</span> <span class="n">n_firms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span> <span class="o">=</span> <span class="n">n_years</span></div>
+
+
+<div class="viewcode-block" id="AKMDGP.generate">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.AKMDGP.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endogeneity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates longitudinal data for workers and firms.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            endogeneity: If True, revenue depends on worker and firm fixed effects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 1. Generate IDs and Years</span>
+        <span class="n">worker_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span>
+
+        <span class="c1"># 2. Worker Fixed Effects (theta_i)</span>
+        <span class="n">worker_fe_unique</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span>
+        <span class="n">worker_fe</span> <span class="o">=</span> <span class="n">worker_fe_unique</span><span class="p">[</span><span class="n">worker_ids</span><span class="p">]</span>
+
+        <span class="c1"># 3. Firm Fixed Effects (psi_j)</span>
+        <span class="n">firm_fe_unique</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_firms</span><span class="p">)</span>
+
+        <span class="c1"># 4. Assignment of workers to firms (with mobility)</span>
+        <span class="c1"># Each worker starts at a random firm and has a probability to move each year</span>
+        <span class="n">firm_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># Initial assignment</span>
+        <span class="n">current_firms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_firms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span>
+
+        <span class="n">move_prob</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># 20% chance to move each year to ensure enough movers</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+            <span class="n">firm_ids</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_firms</span>
+
+            <span class="c1"># Decide who moves for the next year</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">movers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">move_prob</span>
+                <span class="n">current_firms</span><span class="p">[</span><span class="n">movers</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_firms</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">movers</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+        <span class="n">firm_fe</span> <span class="o">=</span> <span class="n">firm_fe_unique</span><span class="p">[</span><span class="n">firm_ids</span><span class="p">]</span>
+
+        <span class="c1"># 5. Covariates</span>
+        <span class="c1"># Age increases by 1 each year</span>
+        <span class="n">base_age</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)</span>
+        <span class="n">age</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">base_age</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span> <span class="o">+</span> <span class="n">years</span>
+
+        <span class="n">sex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+
+        <span class="c1"># Yearly Revenues</span>
+        <span class="k">if</span> <span class="n">endogeneity</span><span class="p">:</span>
+            <span class="c1"># Revenue depends on worker and firm fixed effects</span>
+            <span class="n">revenue</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="mi">2000</span> <span class="o">+</span> <span class="mi">500</span> <span class="o">*</span> <span class="n">worker_fe</span> <span class="o">+</span> <span class="mi">300</span> <span class="o">*</span> <span class="n">firm_fe</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">revenue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s2">&quot;worker_id&quot;</span><span class="p">:</span> <span class="n">worker_ids</span><span class="p">,</span>
+            <span class="s2">&quot;firm_id&quot;</span><span class="p">:</span> <span class="n">firm_ids</span><span class="p">,</span>
+            <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
+            <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="n">age</span><span class="p">,</span>
+            <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="n">sex</span><span class="p">,</span>
+            <span class="s2">&quot;revenue&quot;</span><span class="p">:</span> <span class="n">revenue</span><span class="p">,</span>
+            <span class="s2">&quot;true_worker_fe&quot;</span><span class="p">:</span> <span class="n">worker_fe</span><span class="p">,</span>
+            <span class="s2">&quot;true_firm_fe&quot;</span><span class="p">:</span> <span class="n">firm_fe</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="c1"># 6. Target variable (sick leave)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s2">&quot;revenue&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0001</span><span class="p">,</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_years</span><span class="p">)</span>
+
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;true_worker_fe&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;true_firm_fe&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">noise</span>
+        <span class="p">)</span>
+
         <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sick_leave&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">df</span></div>

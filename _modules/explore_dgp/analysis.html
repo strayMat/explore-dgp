@@ -432,6 +432,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfixest.estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">feols</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.oaxaca</span><span class="w"> </span><span class="kn">import</span> <span class="n">OaxacaBlinder</span>
 
 
@@ -521,6 +522,137 @@
 
         <span class="n">params</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Group 0&quot;</span><span class="p">:</span> <span class="n">p0</span><span class="p">,</span> <span class="s2">&quot;Group 1&quot;</span><span class="p">:</span> <span class="n">p1</span><span class="p">,</span> <span class="s2">&quot;Difference&quot;</span><span class="p">:</span> <span class="n">p1</span> <span class="o">-</span> <span class="n">p0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">params</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AKMAnalysis">
+<a class="viewcode-back" href="../../api.html#explore_dgp.analysis.AKMAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AKMAnalysis</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper for AKM variance decomposition using pyfixest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AKMAnalysis.__init__">
+<a class="viewcode-back" href="../../api.html#explore_dgp.analysis.AKMAnalysis.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">covariates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">worker_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;worker_id&quot;</span><span class="p">,</span>
+        <span class="n">firm_id_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;firm_id&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">covariates</span> <span class="o">=</span> <span class="n">covariates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span> <span class="o">=</span> <span class="n">worker_id_col</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span> <span class="o">=</span> <span class="n">firm_id_col</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="AKMAnalysis.run">
+<a class="viewcode-back" href="../../api.html#explore_dgp.analysis.AKMAnalysis.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the AKM estimation using pyfixest.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pyfixest formula: y ~ X1 + X2 | FE1 + FE2</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="si">}</span><span class="s2"> ~ </span><span class="si">{</span><span class="s1">&#39; + &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">covariates</span><span class="p">)</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit</span> <span class="o">=</span> <span class="n">feols</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span></div>
+
+
+<div class="viewcode-block" id="AKMAnalysis.variance_decomposition">
+<a class="viewcode-back" href="../../api.html#explore_dgp.analysis.AKMAnalysis.variance_decomposition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">variance_decomposition</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">true_worker_fe_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">true_firm_fe_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">true_beta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the AKM variance decomposition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            true_worker_fe_col: Column name for true worker fixed effects (optional).</span>
+<span class="sd">            true_firm_fe_col: Column name for true firm fixed effects (optional).</span>
+<span class="sd">            true_beta: Dictionary of true coefficients for covariates (optional).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ModelNotRunError</span>
+
+        <span class="c1"># Filter dataframe to kept observations (handle dropped singletons/NaNs)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="s2">&quot;_na_index&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">_na_index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">df_kept</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">_na_index</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df_kept</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
+
+        <span class="c1"># 1. Get coefficients for covariates (Estimated)</span>
+        <span class="n">beta_est</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">coef</span><span class="p">()</span>
+        <span class="n">est_covariates</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">covariates</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">beta_est</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">xb_est</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="n">est_covariates</span><span class="p">]</span> <span class="o">@</span> <span class="n">beta_est</span><span class="p">[</span><span class="n">est_covariates</span><span class="p">]</span>
+
+        <span class="c1"># 2. Get fixed effects (Estimated)</span>
+        <span class="n">fixef_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">fixef</span><span class="p">()</span>
+        <span class="n">worker_fe_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span> <span class="ow">in</span> <span class="n">fixef_dict</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;C(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="n">firm_fe_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span> <span class="ow">in</span> <span class="n">fixef_dict</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;C(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="n">worker_fe_est</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">worker_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fixef_dict</span><span class="p">[</span><span class="n">worker_fe_key</span><span class="p">])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">firm_fe_est</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">firm_id_col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fixef_dict</span><span class="p">[</span><span class="n">firm_fe_key</span><span class="p">])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># 3. Get residuals (Estimated)</span>
+        <span class="n">epsilon_est</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">resid</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">df_kept</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">compute_decomp</span><span class="p">(</span><span class="n">xb</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">w_fe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">f_fe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">var_y</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;Var(y)&quot;</span><span class="p">:</span> <span class="n">var_y</span><span class="p">,</span>
+                <span class="s2">&quot;Var(XB)&quot;</span><span class="p">:</span> <span class="n">xb</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+                <span class="s2">&quot;Var(Worker FE)&quot;</span><span class="p">:</span> <span class="n">w_fe</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+                <span class="s2">&quot;Var(Firm FE)&quot;</span><span class="p">:</span> <span class="n">f_fe</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+                <span class="s2">&quot;Var(Residual)&quot;</span><span class="p">:</span> <span class="n">eps</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+                <span class="s2">&quot;Cov(XB, Worker FE)&quot;</span><span class="p">:</span> <span class="n">xb</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">w_fe</span><span class="p">),</span>
+                <span class="s2">&quot;Cov(XB, Firm FE)&quot;</span><span class="p">:</span> <span class="n">xb</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">f_fe</span><span class="p">),</span>
+                <span class="s2">&quot;Cov(XB, Residual)&quot;</span><span class="p">:</span> <span class="n">xb</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">eps</span><span class="p">),</span>
+                <span class="s2">&quot;Cov(Worker FE, Firm FE)&quot;</span><span class="p">:</span> <span class="n">w_fe</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">f_fe</span><span class="p">),</span>
+                <span class="s2">&quot;Cov(Worker FE, Residual)&quot;</span><span class="p">:</span> <span class="n">w_fe</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">eps</span><span class="p">),</span>
+                <span class="s2">&quot;Cov(Firm FE, Residual)&quot;</span><span class="p">:</span> <span class="n">f_fe</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">eps</span><span class="p">),</span>
+            <span class="p">}</span>
+
+        <span class="n">decomp_est</span> <span class="o">=</span> <span class="n">compute_decomp</span><span class="p">(</span><span class="n">xb_est</span><span class="p">,</span> <span class="n">worker_fe_est</span><span class="p">,</span> <span class="n">firm_fe_est</span><span class="p">,</span> <span class="n">epsilon_est</span><span class="p">)</span>
+
+        <span class="c1"># Prepare final table</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">decomp_est</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;Variance/Covariance&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span>
+                <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;Estimated&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Var(y)&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="o">/</span> <span class="n">decomp_est</span><span class="p">[</span><span class="s2">&quot;Var(y)&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="p">})</span>
+
+        <span class="c1"># True decomposition if requested</span>
+        <span class="k">if</span> <span class="n">true_worker_fe_col</span> <span class="ow">and</span> <span class="n">true_firm_fe_col</span> <span class="ow">and</span> <span class="n">true_beta</span><span class="p">:</span>
+            <span class="c1"># Filter true_beta to include only covariates present in df_kept</span>
+            <span class="n">beta_true_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">true_beta</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">df_kept</span><span class="o">.</span><span class="n">columns</span><span class="p">})</span>
+            <span class="n">xb_true</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="n">beta_true_series</span><span class="o">.</span><span class="n">index</span><span class="p">]</span> <span class="o">@</span> <span class="n">beta_true_series</span>
+            <span class="n">worker_fe_true</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="n">true_worker_fe_col</span><span class="p">]</span>
+            <span class="n">firm_fe_true</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="n">true_firm_fe_col</span><span class="p">]</span>
+            <span class="c1"># alpha is in dgp params as &#39;alpha&#39;</span>
+            <span class="n">alpha_true</span> <span class="o">=</span> <span class="n">true_beta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">epsilon_true</span> <span class="o">=</span> <span class="n">df_kept</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">alpha_true</span> <span class="o">+</span> <span class="n">xb_true</span> <span class="o">+</span> <span class="n">worker_fe_true</span> <span class="o">+</span> <span class="n">firm_fe_true</span><span class="p">)</span>
+
+            <span class="n">decomp_true</span> <span class="o">=</span> <span class="n">compute_decomp</span><span class="p">(</span><span class="n">xb_true</span><span class="p">,</span> <span class="n">worker_fe_true</span><span class="p">,</span> <span class="n">firm_fe_true</span><span class="p">,</span> <span class="n">epsilon_true</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">decomp_true</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;Variance/Covariance&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span>
+                    <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Var(y)&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="o">/</span> <span class="n">decomp_true</span><span class="p">[</span><span class="s2">&quot;Var(y)&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
