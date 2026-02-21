@@ -101,6 +101,124 @@ class LinearDGP(BaseDGP):
         return df
 
 
+class AKMDGP(BaseDGP):
+    r"""
+    Data Generating Process for AKM (Abowd, Kramarz, and Margolis) model.
+    Estimates worker and firm fixed effects.
+
+    The target variable :math:`y_{it}` (percentage of sick leave) is:
+
+    .. math::
+
+        y_{it} = \alpha + X_{it}\beta + \theta_i + \psi_{J(i,t)} + \epsilon_{it}
+
+    where:
+    - :math:`\theta_i` is the worker fixed effect.
+    - :math:`\psi_{J(i,t)}` is the firm fixed effect for the firm :math:`J(i,t)` worker :math:`i` works for at time :math:`t`.
+    """
+
+    def __init__(
+        self,
+        n_workers: int = 10000,
+        n_firms: int = 5000,
+        n_years: int = 5,
+        seed: int = 42,
+    ):
+        super().__init__(n_samples=n_workers * n_years, seed=seed)
+        self.n_workers = n_workers
+        self.n_firms = n_firms
+        self.n_years = n_years
+
+    def generate(self, endogeneity: bool = False) -> pd.DataFrame:
+        """
+        Generates longitudinal data for workers and firms.
+
+        Args:
+            endogeneity: If True, revenue depends on worker and firm fixed effects.
+        """
+        # 1. Generate IDs and Years
+        worker_ids = np.repeat(np.arange(self.n_workers), self.n_years)
+        years = np.tile(np.arange(self.n_years), self.n_workers)
+
+        # 2. Worker Fixed Effects (theta_i)
+        worker_fe_unique = self.rng.normal(0, 1.0, size=self.n_workers)
+        worker_fe = worker_fe_unique[worker_ids]
+
+        # 3. Firm Fixed Effects (psi_j)
+        firm_fe_unique = self.rng.normal(0, 1.0, size=self.n_firms)
+
+        # 4. Assignment of workers to firms (with mobility)
+        # Each worker starts at a random firm and has a probability to move each year
+        firm_ids = np.zeros(self.n_workers * self.n_years, dtype=int)
+
+        # Initial assignment
+        current_firms = self.rng.integers(0, self.n_firms, size=self.n_workers)
+
+        move_prob = 0.2  # 20% chance to move each year to ensure enough movers
+
+        for t in range(self.n_years):
+            idx = np.arange(t, self.n_workers * self.n_years, self.n_years)
+            firm_ids[idx] = current_firms
+
+            # Decide who moves for the next year
+            if t < self.n_years - 1:
+                movers = self.rng.random(size=self.n_workers) < move_prob
+                current_firms[movers] = self.rng.integers(0, self.n_firms, size=movers.sum())
+
+        firm_fe = firm_fe_unique[firm_ids]
+
+        # 5. Covariates
+        # Age increases by 1 each year
+        base_age = self.rng.integers(18, 60, size=self.n_workers)
+        age = np.repeat(base_age, self.n_years) + years
+
+        sex = np.repeat(self.rng.choice([0, 1], size=self.n_workers), self.n_years)
+
+        # Yearly Revenues
+        if endogeneity:
+            # Revenue depends on worker and firm fixed effects
+            revenue = (
+                2000 + 500 * worker_fe + 300 * firm_fe + self.rng.normal(0, 200, size=self.n_workers * self.n_years)
+            )
+        else:
+            revenue = self.rng.normal(2500, 500, size=self.n_workers * self.n_years)
+
+        df = pd.DataFrame({
+            "worker_id": worker_ids,
+            "firm_id": firm_ids,
+            "year": years,
+            "age": age,
+            "sex": sex,
+            "revenue": revenue,
+            "true_worker_fe": worker_fe,
+            "true_firm_fe": firm_fe,
+        })
+
+        # 6. Target variable (sick leave)
+        self.params = {
+            "age": 0.05,
+            "sex": 0.5,
+            "revenue": -0.0001,
+            "alpha": 2.0,
+        }
+
+        noise = self.rng.normal(0, 0.5, size=self.n_workers * self.n_years)
+
+        df["sick_leave"] = (
+            self.params["alpha"]
+            + self.params["age"] * df["age"]
+            + self.params["sex"] * df["sex"]
+            + self.params["revenue"] * df["revenue"]
+            + df["true_worker_fe"]
+            + df["true_firm_fe"]
+            + noise
+        )
+
+        df["sick_leave"] = df["sick_leave"].clip(lower=0)
+
+        return df
+
+
 class NonLinearDGP(BaseDGP):
     r"""
     Non-Linear Data Generating Process.
