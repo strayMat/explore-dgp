@@ -2,13 +2,17 @@ name: Main
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
+  deployments: write
+  statuses: write
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
@@ -68,5 +72,4 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: .docs/_build/
-          
+          source-dir: docs/_build/

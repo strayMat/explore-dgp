@@ -1,8 +1,8 @@
-from explore_dgp.dgps import LinearDGP, NonLinearDGP, UnobservedConfounderDGP
+from explore_dgp.dgps import NonLinearDGP, ObLinearDGP, UnobservedConfounderDGP
 
 
 def test_linear_dgp():
-    dgp = LinearDGP(n_samples=100, seed=42)
+    dgp = ObLinearDGP(n_samples=100, seed=42)
     df = dgp.generate()
     assert len(df) == 100
     assert "sick_leave" in df.columns

@@ -35,7 +35,7 @@ import pandas as pd  # noqa: E402
 import seaborn as sns  # noqa: E402
 
 from explore_dgp.analysis import OaxacaAnalysis  # noqa: E402
-from explore_dgp.dgps import LinearDGP, NonLinearDGP, UnobservedConfounderDGP  # noqa: E402
+from explore_dgp.dgps import NonLinearDGP, ObLinearDGP, UnobservedConfounderDGP  # noqa: E402
 
 # Set plotting style
 sns.set_theme(style="whitegrid")
@@ -53,7 +53,7 @@ sns.set_theme(style="whitegrid")
 # %%
 TRUE_EFFECT = 0.5  # True effect of being in 2023 vs 2018
 
-linear_dgp = LinearDGP(n_samples=5000)
+linear_dgp = ObLinearDGP(n_samples=5000)
 df_linear = linear_dgp.generate(true_effect=TRUE_EFFECT)
 
 covariates = ["age", "sex", "revenue", "unemployment_rate"]

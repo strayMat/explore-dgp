@@ -1,9 +1,9 @@
 from explore_dgp.analysis import OaxacaAnalysis
-from explore_dgp.dgps import LinearDGP
+from explore_dgp.dgps import ObLinearDGP
 
 
 def test_oaxaca_analysis():
-    dgp = LinearDGP(n_samples=500, seed=42)
+    dgp = ObLinearDGP(n_samples=500, seed=42)
     df = dgp.generate()
 
     covariates = ["age", "sex", "revenue", "unemployment_rate"]
