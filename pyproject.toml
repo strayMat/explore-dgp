@@ -141,3 +141,5 @@ exclude = [
 
 [tool.ruff.format]
 preview = true
+quote-style = "double"
+indent-style = "space"

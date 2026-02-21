@@ -58,7 +58,8 @@ class BaseDGP(ABC):
         pass
 
 
-class LinearDGP(BaseDGP):
+# Oaxaca Blinder DGPs
+class ObLinearDGP(BaseDGP):
     r"""
     Linear Data Generating Process.
 
