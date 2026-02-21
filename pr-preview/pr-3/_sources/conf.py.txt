@@ -86,11 +86,6 @@ html_theme_options = {
     ],
 }
 html_show_sourcelink = False  # Remove 'view source code' from top of page (for html, not python)
-# Remove the primary sidebar
-html_sidebars = {
-  "pagename": []
-}
-
 
 # -- Extension configurations ---------------------------------------------------
 
