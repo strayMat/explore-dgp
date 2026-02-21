@@ -1,0 +1,899 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AKM Variance Decomposition Demonstration &#8212; explore-dgp 0.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/akm_demonstration';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CLI Usage" href="../cli-usage.html" />
+    <link rel="prev" title="Oaxaca-Blinder Failure Modes Analysis" href="oaxaca_failure_analysis.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.svg" class="logo__image only-light" alt="explore-dgp 0.0.1 documentation - Home"/>
+    <img src="../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="explore-dgp 0.0.1 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../readme.html">
+    explore-dgp
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../data.html">
+    Data
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../notebooks.html">
+    Notebooks
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../cli-usage.html">
+    CLI usage
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../license.html">
+    License
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/strayMat/explore-dgp" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../readme.html">
+    explore-dgp
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../data.html">
+    Data
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../notebooks.html">
+    Notebooks
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../cli-usage.html">
+    CLI usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../license.html">
+    License
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/strayMat/explore-dgp" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="oaxaca_failure_analysis.html">Oaxaca-Blinder Failure Modes Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">AKM Variance Decomposition Demonstration</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../notebooks.html" class="nav-link">Analysis Reports</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">AKM Variance Decomposition Demonstration</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="akm-variance-decomposition-demonstration">
+<h1>AKM Variance Decomposition Demonstration<a class="headerlink" href="#akm-variance-decomposition-demonstration" title="Link to this heading">#</a></h1>
+<p>This notebook demonstrates the AKM (Abowd, Kramarz, and Margolis) model for decomposing the variance of worker outcomes into worker and firm components.</p>
+<section id="use-case">
+<h2>Use Case<a class="headerlink" href="#use-case" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Target (<span class="math notranslate nohighlight">\(y\)</span>):</strong> Percentage of sick leave per worker <span class="math notranslate nohighlight">\(i\)</span> and year <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><strong>Covariates (<span class="math notranslate nohighlight">\(X\)</span>):</strong> Age, Sex, Yearly Revenues.</p></li>
+<li><p><strong>Worker Fixed Effect (<span class="math notranslate nohighlight">\(\theta_i\)</span>):</strong> Captures time-invariant worker characteristics.</p></li>
+<li><p><strong>Firm Fixed Effect (<span class="math notranslate nohighlight">\(\psi_j\)</span>):</strong> Captures time-invariant firm characteristics.</p></li>
+</ul>
+<p>We explore two scenarios:</p>
+<ol class="arabic simple">
+<li><p><strong>Exogenous Revenues</strong>: Revenue is independent of worker and firm fixed effects.</p></li>
+<li><p><strong>Endogenous Revenues</strong>: Revenue depends on worker and firm fixed effects.</p></li>
+</ol>
+<p>The AKM hypothesis of movers’ exogeneity is maintained in both DGPs (workers move randomly between firms).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># Add the project root to the path so that explore_dgp can be imported during doc build</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="k">while</span> <span class="n">path</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>  <span class="c1"># noqa: E402</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">explore_dgp.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">AKMAnalysis</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">explore_dgp.dgps</span><span class="w"> </span><span class="kn">import</span> <span class="n">AKMDGP</span>  <span class="c1"># noqa: E402</span>
+
+<span class="c1"># Set plotting style</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generate-data-exogenous-case">
+<h2>1. Generate Data (Exogenous Case)<a class="headerlink" href="#generate-data-exogenous-case" title="Link to this heading">#</a></h2>
+<p>We simulate 10,000 workers and 5,000 firms over 5 years.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dgp_exog</span> <span class="o">=</span> <span class="n">AKMDGP</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_firms</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">n_years</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">df_exog</span> <span class="o">=</span> <span class="n">dgp_exog</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">endogeneity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset shape: </span><span class="si">{</span><span class="n">df_exog</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">df_exog</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset shape: (50000, 9)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>worker_id</th>
+      <th>firm_id</th>
+      <th>year</th>
+      <th>age</th>
+      <th>sex</th>
+      <th>revenue</th>
+      <th>true_worker_fe</th>
+      <th>true_firm_fe</th>
+      <th>sick_leave</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>4297</td>
+      <td>0</td>
+      <td>32</td>
+      <td>1</td>
+      <td>1845.994462</td>
+      <td>0.304717</td>
+      <td>-1.658836</td>
+      <td>2.044110</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>4297</td>
+      <td>1</td>
+      <td>33</td>
+      <td>1</td>
+      <td>2270.935010</td>
+      <td>0.304717</td>
+      <td>-1.658836</td>
+      <td>1.706862</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>91</td>
+      <td>2</td>
+      <td>34</td>
+      <td>1</td>
+      <td>3274.894610</td>
+      <td>0.304717</td>
+      <td>-0.131744</td>
+      <td>3.938820</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>91</td>
+      <td>3</td>
+      <td>35</td>
+      <td>1</td>
+      <td>1913.096122</td>
+      <td>0.304717</td>
+      <td>-0.131744</td>
+      <td>4.217849</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>91</td>
+      <td>4</td>
+      <td>36</td>
+      <td>1</td>
+      <td>2862.306443</td>
+      <td>0.304717</td>
+      <td>-0.131744</td>
+      <td>4.089019</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="run-akm-estimation-exogenous-case">
+<h2>2. Run AKM Estimation (Exogenous Case)<a class="headerlink" href="#run-akm-estimation-exogenous-case" title="Link to this heading">#</a></h2>
+<p>We use <code class="docutils literal notranslate"><span class="pre">pyfixest</span></code> to estimate the worker and firm fixed effects simultaneously with the covariates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">covariates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">]</span>
+<span class="n">analysis_exog</span> <span class="o">=</span> <span class="n">AKMAnalysis</span><span class="p">(</span><span class="n">df_exog</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">)</span>
+<span class="n">analysis_exog</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">decomp_exog</span> <span class="o">=</span> <span class="n">analysis_exog</span><span class="o">.</span><span class="n">variance_decomposition</span><span class="p">(</span>
+    <span class="n">true_worker_fe_col</span><span class="o">=</span><span class="s2">&quot;true_worker_fe&quot;</span><span class="p">,</span> <span class="n">true_firm_fe_col</span><span class="o">=</span><span class="s2">&quot;true_firm_fe&quot;</span><span class="p">,</span> <span class="n">true_beta</span><span class="o">=</span><span class="n">dgp_exog</span><span class="o">.</span><span class="n">params</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variance Decomposition (Exogenous Case):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decomp_exog</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/explore-dgp/explore-dgp/.venv/lib/python3.12/site-packages/pyfixest/estimation/model_matrix_fixest_.py:215: UserWarning: 149 singleton fixed effect(s) detected. These observations are dropped from the model.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/explore-dgp/explore-dgp/.venv/lib/python3.12/site-packages/pyfixest/estimation/feols_.py:2847: UserWarning: 
+            1 variables dropped due to multicollinearity.
+            The following variables are dropped: [&#39;sex&#39;].
+            
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variance Decomposition (Exogenous Case):
+     Variance/Covariance      Type         Value   % of Var(y)
+                  Var(y) Estimated  2.675853e+00  1.000000e+02
+                 Var(XB) Estimated  3.964211e-01  1.481476e+01
+          Var(Worker FE) Estimated  1.412129e+00  5.277306e+01
+            Var(Firm FE) Estimated  1.323085e+00  4.944534e+01
+           Var(Residual) Estimated  1.749509e-01  6.538136e+00
+      Cov(XB, Worker FE) Estimated  1.392727e-03  5.204796e-02
+        Cov(XB, Firm FE) Estimated -7.014889e-03 -2.621552e-01
+       Cov(XB, Residual) Estimated  2.321088e-13  8.674198e-12
+ Cov(Worker FE, Firm FE) Estimated -3.097444e-01 -1.157554e+01
+Cov(Worker FE, Residual) Estimated  6.250954e-12  2.336060e-10
+  Cov(Firm FE, Residual) Estimated  1.781702e-20  6.658445e-19
+                  Var(y)      True  2.675853e+00  1.000000e+02
+                 Var(XB)      True  4.414555e-01  1.649775e+01
+          Var(Worker FE)      True  1.012751e+00  3.784777e+01
+            Var(Firm FE)      True  1.005493e+00  3.757653e+01
+           Var(Residual)      True  2.501431e-01  9.348164e+00
+      Cov(XB, Worker FE)      True  3.877159e-03  1.448943e-01
+        Cov(XB, Firm FE)      True -1.135957e-03 -4.245215e-02
+       Cov(XB, Residual)      True -2.966646e-04 -1.108673e-02
+ Cov(Worker FE, Firm FE)      True -2.986322e-03 -1.116026e-01
+Cov(Worker FE, Residual)      True -7.119389e-03 -2.660606e-01
+  Cov(Firm FE, Residual)      True -9.333473e-03 -3.488037e-01
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generate-data-endogenous-case">
+<h2>3. Generate Data (Endogenous Case)<a class="headerlink" href="#generate-data-endogenous-case" title="Link to this heading">#</a></h2>
+<p>In this scenario, <code class="docutils literal notranslate"><span class="pre">revenue</span></code> is correlated with worker and firm fixed effects.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dgp_endo</span> <span class="o">=</span> <span class="n">AKMDGP</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_firms</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">n_years</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">df_endo</span> <span class="o">=</span> <span class="n">dgp_endo</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">endogeneity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">analysis_endo</span> <span class="o">=</span> <span class="n">AKMAnalysis</span><span class="p">(</span><span class="n">df_endo</span><span class="p">,</span> <span class="s2">&quot;sick_leave&quot;</span><span class="p">,</span> <span class="n">covariates</span><span class="p">)</span>
+<span class="n">analysis_endo</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">decomp_endo</span> <span class="o">=</span> <span class="n">analysis_endo</span><span class="o">.</span><span class="n">variance_decomposition</span><span class="p">(</span>
+    <span class="n">true_worker_fe_col</span><span class="o">=</span><span class="s2">&quot;true_worker_fe&quot;</span><span class="p">,</span> <span class="n">true_firm_fe_col</span><span class="o">=</span><span class="s2">&quot;true_firm_fe&quot;</span><span class="p">,</span> <span class="n">true_beta</span><span class="o">=</span><span class="n">dgp_endo</span><span class="o">.</span><span class="n">params</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Variance Decomposition (Endogenous Case):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decomp_endo</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/explore-dgp/explore-dgp/.venv/lib/python3.12/site-packages/pyfixest/estimation/model_matrix_fixest_.py:215: UserWarning: 149 singleton fixed effect(s) detected. These observations are dropped from the model.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/explore-dgp/explore-dgp/.venv/lib/python3.12/site-packages/pyfixest/estimation/feols_.py:2847: UserWarning: 
+            1 variables dropped due to multicollinearity.
+            The following variables are dropped: [&#39;sex&#39;].
+            
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variance Decomposition (Endogenous Case):
+     Variance/Covariance      Type         Value   % of Var(y)
+                  Var(y) Estimated  2.526108e+00  1.000000e+02
+                 Var(XB) Estimated  3.985672e-01  1.577792e+01
+          Var(Worker FE) Estimated  1.423309e+00  5.634397e+01
+            Var(Firm FE) Estimated  1.330523e+00  5.267089e+01
+           Var(Residual) Estimated  1.753612e-01  6.941951e+00
+      Cov(XB, Worker FE) Estimated -5.136083e-02 -2.033201e+00
+        Cov(XB, Firm FE) Estimated -3.938283e-02 -1.559032e+00
+       Cov(XB, Residual) Estimated  1.496323e-12  5.923432e-11
+ Cov(Worker FE, Firm FE) Estimated -3.100831e-01 -1.227513e+01
+Cov(Worker FE, Residual) Estimated  6.239373e-12  2.469955e-10
+  Cov(Firm FE, Residual) Estimated  4.008829e-20  1.586959e-18
+                  Var(y)      True  2.526108e+00  1.000000e+02
+                 Var(XB)      True  4.425341e-01  1.751842e+01
+          Var(Worker FE)      True  1.012751e+00  4.009135e+01
+            Var(Firm FE)      True  1.005493e+00  3.980403e+01
+           Var(Residual)      True  2.499963e-01  9.896503e+00
+      Cov(XB, Worker FE)      True -4.651317e-02 -1.841298e+00
+        Cov(XB, Firm FE)      True -3.120405e-02 -1.235262e+00
+       Cov(XB, Residual)      True  8.645752e-04  3.422559e-02
+ Cov(Worker FE, Firm FE)      True -2.986322e-03 -1.182183e-01
+Cov(Worker FE, Residual)      True -5.091220e-03 -2.015441e-01
+  Cov(Firm FE, Residual)      True -7.403001e-03 -2.930596e-01
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>4. Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h2>
+<p>We compare the variance contributions between the two cases.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">decomp_exog</span><span class="p">[</span><span class="s2">&quot;Case&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Exogenous&quot;</span>
+<span class="n">decomp_endo</span><span class="p">[</span><span class="s2">&quot;Case&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Endogenous&quot;</span>
+
+<span class="n">df_compare</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">decomp_exog</span><span class="p">,</span> <span class="n">decomp_endo</span><span class="p">])</span>
+
+<span class="c1"># Filter for main variance components for the plot</span>
+<span class="n">plot_components</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Var(XB)&quot;</span><span class="p">,</span> <span class="s2">&quot;Var(Worker FE)&quot;</span><span class="p">,</span> <span class="s2">&quot;Var(Firm FE)&quot;</span><span class="p">,</span> <span class="s2">&quot;Var(Residual)&quot;</span><span class="p">]</span>
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">df_compare</span><span class="p">[</span><span class="n">df_compare</span><span class="p">[</span><span class="s2">&quot;Variance/Covariance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">plot_components</span><span class="p">)]</span>
+
+<span class="c1"># Create a combined label for plotting: Case + Type (Estimated/True)</span>
+<span class="n">df_plot</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot</span><span class="p">[</span><span class="s2">&quot;Case&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">df_plot</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_plot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Variance/Covariance&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Var(y)&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Comparison of Variance Components: Estimated vs True (</span><span class="si">% o</span><span class="s2">f Total Variance)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% o</span><span class="s2">f Var(y)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fd974de2ca1ac61e88b90563ee6a0f870cba09c35e2d852f548395e65b78c379.png" src="../_images/fd974de2ca1ac61e88b90563ee6a0f870cba09c35e2d852f548395e65b78c379.png" />
+</div>
+</div>
+</section>
+<section id="discussion-of-findings">
+<h2>5. Discussion of Findings<a class="headerlink" href="#discussion-of-findings" title="Link to this heading">#</a></h2>
+<section id="variance-decomposition-estimated-vs-true">
+<h3>Variance Decomposition: Estimated vs True<a class="headerlink" href="#variance-decomposition-estimated-vs-true" title="Link to this heading">#</a></h3>
+<p>The AKM model allows us to decompose the variance of sick leave. By comparing the <strong>Estimated</strong> values (from <code class="docutils literal notranslate"><span class="pre">pyfixest</span></code>) with the <strong>True</strong> values (from the DGP), we can observe:</p>
+<ul class="simple">
+<li><p>How well the fixed effects are captured (Worker FE and Firm FE).</p></li>
+<li><p>The amount of variance attributed to covariates (<span class="math notranslate nohighlight">\(XB\)</span>).</p></li>
+<li><p>The residual variance, which should be close to the true noise variance (<span class="math notranslate nohighlight">\(0.5^2 = 0.25\)</span> in our DGP).</p></li>
+</ul>
+<p>In the output above, notice that the estimated worker and firm variances can sometimes overstate the true variances due to the “limited mobility bias” in finite samples, even if movers are exogenous.</p>
+</section>
+<section id="endogeneity-impact">
+<h3>Endogeneity Impact<a class="headerlink" href="#endogeneity-impact" title="Link to this heading">#</a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">revenue</span></code> is endogenous (correlated with fixed effects), we see that:</p>
+<ul class="simple">
+<li><p>In the <strong>Exogenous</strong> case, <span class="math notranslate nohighlight">\(Cov(XB, \text{Worker FE})\)</span> and <span class="math notranslate nohighlight">\(Cov(XB, \text{Firm FE})\)</span> are close to zero.</p></li>
+<li><p>In the <strong>Endogenous</strong> case, these covariances become significant, as <code class="docutils literal notranslate"><span class="pre">revenue</span></code> is explicitly generated as a function of the fixed effects.</p></li>
+<li><p>The AKM model correctly identifies these relationships, as seen by the matching signs and magnitudes between Estimated and True covariances.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="oaxaca_failure_analysis.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Oaxaca-Blinder Failure Modes Analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cli-usage.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">CLI Usage</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case">Use Case</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-data-exogenous-case">1. Generate Data (Exogenous Case)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-akm-estimation-exogenous-case">2. Run AKM Estimation (Exogenous Case)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-data-endogenous-case">3. Generate Data (Endogenous Case)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">4. Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-findings">5. Discussion of Findings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-decomposition-estimated-vs-true">Variance Decomposition: Estimated vs True</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endogeneity-impact">Endogeneity Impact</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Matthieu Doutreligne &lt;matt.dout@gmail.com&gt;.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
