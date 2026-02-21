@@ -5,12 +5,12 @@ description = "experiment with dgps, causal models with ai"
 authors = [{ name = "Matthieu Doutreligne", email = "matt.dout@gmail.com" }]
 readme = "README.md"
 keywords = ['python']
-requires-python = ">=3.13,<4.0"
+requires-python = ">=3.12,<4.0"
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
