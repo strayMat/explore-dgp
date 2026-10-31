@@ -315,3 +315,127 @@ class UnobservedConfounderDGP(BaseDGP):
         df["sick_leave"] = df["sick_leave"].clip(lower=0)
 
         return df
+
+
+class StaggeredAdoptionDGP(BaseDGP):
+    r"""
+    Panel DGP for a policy adopted at different dates by different units (staggered adoption).
+
+    Use case: départements adopt a sick-leave prevention programme in different years.
+    The outcome :math:`y_{it}` (sick-leave rate of département :math:`i` in year :math:`t`) is:
+
+    .. math::
+
+        y_{it} = \alpha_i + \lambda_t + \beta x_{it} + \tau_{it} D_{it} + \epsilon_{it}
+
+    where:
+
+    - :math:`\alpha_i` is the unit (département) fixed effect,
+    - :math:`\lambda_t` is the time (year) fixed effect,
+    - :math:`x_{it}` is a time-varying control (unemployment rate),
+    - :math:`D_{it} = 1[t \geq G_i]` is the treatment indicator, :math:`G_i` the adoption year
+      (:math:`G_i = \infty` for never-treated units),
+    - :math:`\tau_{it}` is the (possibly heterogeneous / dynamic) treatment effect.
+
+    Args:
+        n_units: Number of units (départements).
+        n_periods: Number of years.
+        cohorts: Adoption period index of each treated cohort.
+        cohort_shares: Share of units in each cohort; the remaining share is never treated.
+        missing_rate: Share of observations randomly dropped (unbalanced panel).
+        seed: Random seed.
+    """
+
+    def __init__(
+        self,
+        n_units: int = 100,
+        n_periods: int = 15,
+        cohorts: tuple[int, ...] = (4, 8, 11),
+        cohort_shares: tuple[float, ...] = (0.25, 0.25, 0.25),
+        missing_rate: float = 0.0,
+        seed: int = 42,
+    ):
+        if len(cohorts) != len(cohort_shares):
+            raise ValueError("cohorts and cohort_shares must have the same length.")  # noqa: TRY003
+        if sum(cohort_shares) > 1:
+            raise ValueError("cohort_shares must sum to at most 1.")  # noqa: TRY003
+        super().__init__(n_samples=n_units * n_periods, seed=seed)
+        self.n_units = n_units
+        self.n_periods = n_periods
+        self.cohorts = cohorts
+        self.cohort_shares = cohort_shares
+        self.missing_rate = missing_rate
+
+    def generate(
+        self,
+        effect_type: str = "homogeneous",
+        tau: float = -1.0,
+        tau_slope: float = -0.3,
+        confounded_control: bool = True,
+    ) -> pd.DataFrame:
+        r"""
+        Generates the panel.
+
+        Args:
+            effect_type: ``"homogeneous"`` (:math:`\tau_{it} = \tau`) or ``"dynamic"``
+                (:math:`\tau_{it} = \tau + \text{tau\_slope} \times (t - G_i)`, the effect grows with exposure).
+            tau: Treatment effect on impact.
+            tau_slope: Additional effect per year since adoption (dynamic case only).
+            confounded_control: If True, the control has a trend that differs by adoption cohort
+                (early adopters see unemployment fall), so omitting it biases the estimate.
+        """
+        if effect_type not in {"homogeneous", "dynamic"}:
+            raise ValueError("effect_type must be 'homogeneous' or 'dynamic'.")  # noqa: TRY003
+        n, T = self.n_units, self.n_periods
+        unit = np.repeat(np.arange(n), T)
+        time = np.tile(np.arange(T), n)
+
+        # Adoption cohorts (np.inf = never treated)
+        probs = [*self.cohort_shares, 1 - sum(self.cohort_shares)]
+        options = np.array([*self.cohorts, np.inf], dtype=float)
+        cohort_unit = self.rng.choice(options, size=n, p=probs)
+        cohort = cohort_unit[unit]
+
+        # Fixed effects. Early adopters have higher baseline sick leave (selection on levels is fine for FE).
+        rank = np.where(np.isinf(cohort_unit), T, cohort_unit)
+        alpha_unit = 5.0 - 0.1 * rank + self.rng.normal(0, 1.0, size=n)
+        lambda_time = 0.15 * np.arange(T) + 0.3 * np.sin(np.arange(T) / 2) + self.rng.normal(0, 0.1, size=T)
+        lambda_time -= lambda_time[0]  # normalisation: lambda_0 = 0
+        alpha = alpha_unit[unit]
+        lam = lambda_time[time]
+
+        # Control: unemployment rate, correlated with unit FE, common cycle and (optionally) a cohort-specific trend
+        x = 8.0 + 0.5 * alpha + 0.5 * np.cos(time / 3) + self.rng.normal(0, 0.5, size=n * T)
+        if confounded_control:
+            # Units that adopt earlier experience a steeper decline of unemployment
+            x = x - 0.15 * time * (rank[unit] < T) * (T - rank[unit]) / T
+
+        # Treatment
+        treated = (time >= cohort).astype(int)
+        rel_time = np.where(np.isinf(cohort), np.nan, time - cohort)
+        if effect_type == "homogeneous":
+            tau_it = np.full(n * T, tau)
+        else:
+            tau_it = tau + tau_slope * np.nan_to_num(rel_time, nan=0.0)
+        tau_it = tau_it * treated
+
+        self.params = {"beta_x": 0.4, "tau": tau, "tau_slope": tau_slope if effect_type == "dynamic" else 0.0}
+        eps = self.rng.normal(0, 0.3, size=n * T)
+        y = alpha + lam + self.params["beta_x"] * x + tau_it + eps
+
+        df = pd.DataFrame({
+            "unit": unit,
+            "time": time,
+            "cohort": cohort,
+            "rel_time": rel_time,
+            "treated": treated,
+            "unemployment": x,
+            "sick_leave": y,
+            "true_unit_fe": alpha,
+            "true_time_fe": lam,
+            "true_tau": tau_it,
+        })
+        if self.missing_rate > 0:
+            keep = self.rng.random(len(df)) >= self.missing_rate
+            df = df.loc[keep].reset_index(drop=True)
+        return df

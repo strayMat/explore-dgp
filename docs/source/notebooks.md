@@ -7,4 +7,5 @@ Below is the analysis of Oaxaca-Blinder failure modes.
 
 notebooks/oaxaca_failure_analysis.py
 notebooks/akm_demonstration.py
+notebooks/twfe_staggered_adoption.py
 ```
