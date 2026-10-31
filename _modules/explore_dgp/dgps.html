@@ -785,6 +785,139 @@
         <span class="k">return</span> <span class="n">df</span></div>
 </div>
 
+
+
+<div class="viewcode-block" id="StaggeredAdoptionDGP">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.StaggeredAdoptionDGP">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StaggeredAdoptionDGP</span><span class="p">(</span><span class="n">BaseDGP</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Panel DGP for a policy adopted at different dates by different units (staggered adoption).</span>
+
+<span class="sd">    Use case: départements adopt a sick-leave prevention programme in different years.</span>
+<span class="sd">    The outcome :math:`y_{it}` (sick-leave rate of département :math:`i` in year :math:`t`) is:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        y_{it} = \alpha_i + \lambda_t + \beta x_{it} + \tau_{it} D_{it} + \epsilon_{it}</span>
+
+<span class="sd">    where:</span>
+
+<span class="sd">    - :math:`\alpha_i` is the unit (département) fixed effect,</span>
+<span class="sd">    - :math:`\lambda_t` is the time (year) fixed effect,</span>
+<span class="sd">    - :math:`x_{it}` is a time-varying control (unemployment rate),</span>
+<span class="sd">    - :math:`D_{it} = 1[t \geq G_i]` is the treatment indicator, :math:`G_i` the adoption year</span>
+<span class="sd">      (:math:`G_i = \infty` for never-treated units),</span>
+<span class="sd">    - :math:`\tau_{it}` is the (possibly heterogeneous / dynamic) treatment effect.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_units: Number of units (départements).</span>
+<span class="sd">        n_periods: Number of years.</span>
+<span class="sd">        cohorts: Adoption period index of each treated cohort.</span>
+<span class="sd">        cohort_shares: Share of units in each cohort; the remaining share is never treated.</span>
+<span class="sd">        missing_rate: Share of observations randomly dropped (unbalanced panel).</span>
+<span class="sd">        seed: Random seed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StaggeredAdoptionDGP.__init__">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.StaggeredAdoptionDGP.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">n_periods</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">cohorts</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+        <span class="n">cohort_shares</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+        <span class="n">missing_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cohorts</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cohort_shares</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cohorts and cohort_shares must have the same length.&quot;</span><span class="p">)</span>  <span class="c1"># noqa: TRY003</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cohort_shares</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cohort_shares must sum to at most 1.&quot;</span><span class="p">)</span>  <span class="c1"># noqa: TRY003</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_units</span> <span class="o">*</span> <span class="n">n_periods</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_units</span> <span class="o">=</span> <span class="n">n_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_periods</span> <span class="o">=</span> <span class="n">n_periods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cohorts</span> <span class="o">=</span> <span class="n">cohorts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cohort_shares</span> <span class="o">=</span> <span class="n">cohort_shares</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span> <span class="o">=</span> <span class="n">missing_rate</span></div>
+
+
+<div class="viewcode-block" id="StaggeredAdoptionDGP.generate">
+<a class="viewcode-back" href="../../api.html#explore_dgp.dgps.StaggeredAdoptionDGP.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">effect_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;homogeneous&quot;</span><span class="p">,</span>
+        <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">tau_slope</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">confounded_control</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the panel.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            effect_type: ``&quot;homogeneous&quot;`` (:math:`\tau_{it} = \tau`) or ``&quot;dynamic&quot;``</span>
+<span class="sd">                (:math:`\tau_{it} = \tau + \text{tau\_slope} \times (t - G_i)`, the effect grows with exposure).</span>
+<span class="sd">            tau: Treatment effect on impact.</span>
+<span class="sd">            tau_slope: Additional effect per year since adoption (dynamic case only).</span>
+<span class="sd">            confounded_control: If True, the control has a trend that differs by adoption cohort</span>
+<span class="sd">                (early adopters see unemployment fall), so omitting it biases the estimate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">effect_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;homogeneous&quot;</span><span class="p">,</span> <span class="s2">&quot;dynamic&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;effect_type must be &#39;homogeneous&#39; or &#39;dynamic&#39;.&quot;</span><span class="p">)</span>  <span class="c1"># noqa: TRY003</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_units</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_periods</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+
+        <span class="c1"># Adoption cohorts (np.inf = never treated)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cohort_shares</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cohort_shares</span><span class="p">)]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cohorts</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">cohort_unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span>
+        <span class="n">cohort</span> <span class="o">=</span> <span class="n">cohort_unit</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+
+        <span class="c1"># Fixed effects. Early adopters have higher baseline sick leave (selection on levels is fine for FE).</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">cohort_unit</span><span class="p">),</span> <span class="n">T</span><span class="p">,</span> <span class="n">cohort_unit</span><span class="p">)</span>
+        <span class="n">alpha_unit</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">rank</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">lambda_time</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">lambda_time</span> <span class="o">-=</span> <span class="n">lambda_time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># normalisation: lambda_0 = 0</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_unit</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">lambda_time</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+        <span class="c1"># Control: unemployment rate, correlated with unit FE, common cycle and (optionally) a cohort-specific trend</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">8.0</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">confounded_control</span><span class="p">:</span>
+            <span class="c1"># Units that adopt earlier experience a steeper decline of unemployment</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="n">time</span> <span class="o">*</span> <span class="p">(</span><span class="n">rank</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="n">rank</span><span class="p">[</span><span class="n">unit</span><span class="p">])</span> <span class="o">/</span> <span class="n">T</span>
+
+        <span class="c1"># Treatment</span>
+        <span class="n">treated</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">cohort</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">rel_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">cohort</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">time</span> <span class="o">-</span> <span class="n">cohort</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">effect_type</span> <span class="o">==</span> <span class="s2">&quot;homogeneous&quot;</span><span class="p">:</span>
+            <span class="n">tau_it</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">T</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tau_it</span> <span class="o">=</span> <span class="n">tau</span> <span class="o">+</span> <span class="n">tau_slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">rel_time</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">tau_it</span> <span class="o">=</span> <span class="n">tau_it</span> <span class="o">*</span> <span class="n">treated</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;beta_x&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot;tau&quot;</span><span class="p">:</span> <span class="n">tau</span><span class="p">,</span> <span class="s2">&quot;tau_slope&quot;</span><span class="p">:</span> <span class="n">tau_slope</span> <span class="k">if</span> <span class="n">effect_type</span> <span class="o">==</span> <span class="s2">&quot;dynamic&quot;</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;beta_x&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">tau_it</span> <span class="o">+</span> <span class="n">eps</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
+            <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
+            <span class="s2">&quot;cohort&quot;</span><span class="p">:</span> <span class="n">cohort</span><span class="p">,</span>
+            <span class="s2">&quot;rel_time&quot;</span><span class="p">:</span> <span class="n">rel_time</span><span class="p">,</span>
+            <span class="s2">&quot;treated&quot;</span><span class="p">:</span> <span class="n">treated</span><span class="p">,</span>
+            <span class="s2">&quot;unemployment&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+            <span class="s2">&quot;sick_leave&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+            <span class="s2">&quot;true_unit_fe&quot;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span>
+            <span class="s2">&quot;true_time_fe&quot;</span><span class="p">:</span> <span class="n">lam</span><span class="p">,</span>
+            <span class="s2">&quot;true_tau&quot;</span><span class="p">:</span> <span class="n">tau_it</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">keep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+</div>
+
 </pre></div>
 
                 </article>
