@@ -47,7 +47,7 @@ def plot_data_and_quantiles(X_test, y_test, quantiles):
 
     # Plot 10-90% interval
     ax.fill_between(
-        x_sorted, quantiles[order, 0], quantiles[order, 2], alpha=0.18, color="green", label="10–90% interval"
+        x_sorted, quantiles[order, 0], quantiles[order, 2], alpha=0.18, color="green", label="10-90% interval"
     )
 
     ax.legend(frameon=False)
